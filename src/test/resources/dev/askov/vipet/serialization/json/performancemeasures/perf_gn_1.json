@@ -1,0 +1,312 @@
+{
+  "network": "Комплексна затворена мрежа",
+  "performanceMeasures": [
+    {
+      "id": 1,
+      "values": [
+        {
+          "name": "UTILIZATION",
+          "value": {
+            "center": 0.36812524341064834,
+            "halfWidth": 0.0
+          }
+        },
+        {
+          "name": "THROUGHPUT",
+          "value": {
+            "center": 73.62504868212967,
+            "halfWidth": 0.0
+          }
+        },
+        {
+          "name": "QUEUE_LENGTH",
+          "value": {
+            "center": 0.12996168887484255,
+            "halfWidth": 0.0
+          }
+        },
+        {
+          "name": "NUM_JOBS",
+          "value": {
+            "center": 0.49808693228549095,
+            "halfWidth": 0.0
+          }
+        },
+        {
+          "name": "WAITING_TIME",
+          "value": {
+            "center": 0.0017651830620301777,
+            "halfWidth": 0.0
+          }
+        },
+        {
+          "name": "RESPONSE_TIME",
+          "value": {
+            "center": 0.006765183062030178,
+            "halfWidth": 0.0
+          }
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "values": [
+        {
+          "name": "UTILIZATION",
+          "value": {
+            "center": 0.13804696627899316,
+            "halfWidth": 0.0
+          }
+        },
+        {
+          "name": "THROUGHPUT",
+          "value": {
+            "center": 13.804696627899315,
+            "halfWidth": 0.0
+          }
+        },
+        {
+          "name": "QUEUE_LENGTH",
+          "value": {
+            "center": 0.016484111272728186,
+            "halfWidth": 0.0
+          }
+        },
+        {
+          "name": "NUM_JOBS",
+          "value": {
+            "center": 0.15453107755172132,
+            "halfWidth": 0.0
+          }
+        },
+        {
+          "name": "WAITING_TIME",
+          "value": {
+            "center": 0.0011940944243145316,
+            "halfWidth": 0.0
+          }
+        },
+        {
+          "name": "RESPONSE_TIME",
+          "value": {
+            "center": 0.011194094424314531,
+            "halfWidth": 0.0
+          }
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "values": [
+        {
+          "name": "UTILIZATION",
+          "value": {
+            "center": 0.1380469662789924,
+            "halfWidth": 0.0
+          }
+        },
+        {
+          "name": "THROUGHPUT",
+          "value": {
+            "center": 9.203131085266206,
+            "halfWidth": 0.0
+          }
+        },
+        {
+          "name": "QUEUE_LENGTH",
+          "value": {
+            "center": 0.016484111272728006,
+            "halfWidth": 0.0
+          }
+        },
+        {
+          "name": "NUM_JOBS",
+          "value": {
+            "center": 0.1545310775517204,
+            "halfWidth": 0.0
+          }
+        },
+        {
+          "name": "WAITING_TIME",
+          "value": {
+            "center": 0.0017911416364717785,
+            "halfWidth": 0.0
+          }
+        },
+        {
+          "name": "RESPONSE_TIME",
+          "value": {
+            "center": 0.016791141636471704,
+            "halfWidth": 0.0
+          }
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "values": [
+        {
+          "name": "UTILIZATION",
+          "value": {
+            "center": 0.06902348313949619,
+            "halfWidth": 0.0
+          }
+        },
+        {
+          "name": "THROUGHPUT",
+          "value": {
+            "center": 4.601565542633102,
+            "halfWidth": 0.0
+          }
+        },
+        {
+          "name": "QUEUE_LENGTH",
+          "value": {
+            "center": 0.003986646476284762,
+            "halfWidth": 0.0
+          }
+        },
+        {
+          "name": "NUM_JOBS",
+          "value": {
+            "center": 0.07301012961578095,
+            "halfWidth": 0.0
+          }
+        },
+        {
+          "name": "WAITING_TIME",
+          "value": {
+            "center": 8.663674219890668E-4,
+            "halfWidth": 0.0
+          }
+        },
+        {
+          "name": "RESPONSE_TIME",
+          "value": {
+            "center": 0.01586636742198899,
+            "halfWidth": 0.0
+          }
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "values": [
+        {
+          "name": "UTILIZATION",
+          "value": {
+            "center": 0.6327152621120519,
+            "halfWidth": 0.0
+          }
+        },
+        {
+          "name": "THROUGHPUT",
+          "value": {
+            "center": 25.308610484482074,
+            "halfWidth": 0.0
+          }
+        },
+        {
+          "name": "QUEUE_LENGTH",
+          "value": {
+            "center": 0.42720512938559146,
+            "halfWidth": 0.0
+          }
+        },
+        {
+          "name": "NUM_JOBS",
+          "value": {
+            "center": 1.0599203914976434,
+            "halfWidth": 0.0
+          }
+        },
+        {
+          "name": "WAITING_TIME",
+          "value": {
+            "center": 0.016879833432480677,
+            "halfWidth": 0.0
+          }
+        },
+        {
+          "name": "RESPONSE_TIME",
+          "value": {
+            "center": 0.04187983343248068,
+            "halfWidth": 0.0
+          }
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "values": [
+        {
+          "name": "UTILIZATION",
+          "value": {
+            "center": 0.6327152621120519,
+            "halfWidth": 0.0
+          }
+        },
+        {
+          "name": "THROUGHPUT",
+          "value": {
+            "center": 25.308610484482074,
+            "halfWidth": 0.0
+          }
+        },
+        {
+          "name": "QUEUE_LENGTH",
+          "value": {
+            "center": 0.42720512938559146,
+            "halfWidth": 0.0
+          }
+        },
+        {
+          "name": "NUM_JOBS",
+          "value": {
+            "center": 1.0599203914976434,
+            "halfWidth": 0.0
+          }
+        },
+        {
+          "name": "WAITING_TIME",
+          "value": {
+            "center": 0.016879833432480677,
+            "halfWidth": 0.0
+          }
+        },
+        {
+          "name": "RESPONSE_TIME",
+          "value": {
+            "center": 0.04187983343248068,
+            "halfWidth": 0.0
+          }
+        }
+      ]
+    },
+    {
+      "values": [
+        {
+          "name": "THROUGHPUT",
+          "value": {
+            "center": 73.62504868212967,
+            "halfWidth": 0.0
+          }
+        },
+        {
+          "name": "NUM_JOBS",
+          "value": {
+            "center": 3.0,
+            "halfWidth": 0.0
+          }
+        },
+        {
+          "name": "RESPONSE_TIME",
+          "value": {
+            "center": 0.04074700191985289,
+            "halfWidth": 0.0
+          }
+        }
+      ]
+    }
+  ]
+}

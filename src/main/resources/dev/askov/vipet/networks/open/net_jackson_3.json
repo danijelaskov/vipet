@@ -1,0 +1,94 @@
+{
+  "name": "Једноставна отворена мрежа",
+  "description": "",
+  "nodes": [
+    {
+      "type": "SOURCE",
+      "general": {
+        "id": 1,
+        "name": "Улаз 1",
+        "description": "",
+        "position": {
+          "x": 32.0,
+          "y": 54.19999999999998
+        },
+        "forwardOrientation": true,
+        "fillColor": "0xccffccff",
+        "strokeColor": "0x336633ff"
+      },
+      "timeDistribution": {
+        "type": "EXPONENTIAL",
+        "parameters": {
+          "rate": 1.0
+        }
+      },
+      "routingStrategy": {
+        "type": "PROBABILITIES",
+        "probabilities": [
+          1.0
+        ]
+      }
+    },
+    {
+      "type": "SERVICE_CENTER",
+      "general": {
+        "id": 2,
+        "name": "Сервисни центар 1",
+        "description": "",
+        "position": {
+          "x": 172.99999999999997,
+          "y": 32.0
+        },
+        "forwardOrientation": true,
+        "fillColor": "0xcce6ffff",
+        "strokeColor": "0x334db3ff"
+      },
+      "timeDistribution": {
+        "type": "EXPONENTIAL",
+        "parameters": {
+          "rate": 1.0
+        }
+      },
+      "routingStrategy": {
+        "type": "PROBABILITIES",
+        "probabilities": [
+          1.0
+        ]
+      },
+      "service": {
+        "numberOfServers": 2
+      },
+      "queue": {
+        "discipline": "FIFO"
+      }
+    },
+    {
+      "type": "SINK",
+      "general": {
+        "id": 3,
+        "name": "Излаз 1",
+        "description": "",
+        "position": {
+          "x": 386.6,
+          "y": 53.80000000000001
+        },
+        "forwardOrientation": true,
+        "fillColor": "0xffccccff",
+        "strokeColor": "0xcc3333ff"
+      }
+    }
+  ],
+  "centralServiceCenterId": 2,
+  "connections": [
+    {
+      "sourceId": 1,
+      "destinationId": 2,
+      "type": "MULTI_SEGMENT"
+    },
+    {
+      "sourceId": 2,
+      "destinationId": 3,
+      "type": "MULTI_SEGMENT"
+    }
+  ]
+}

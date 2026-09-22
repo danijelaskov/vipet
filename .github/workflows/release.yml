@@ -1,0 +1,170 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  ci:
+    name: CI (Shared)
+    uses: ./.github/workflows/ci-shared.yml
+
+  build-windows-installer:
+    name: Build Windows Installer
+    runs-on: windows-latest
+    needs: ci
+
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v4
+
+      - name: Extract version from tag
+        id: version
+        shell: bash
+        run: echo "VERSION=${GITHUB_REF_NAME#v}" >> "$GITHUB_OUTPUT"
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+
+      - name: Create installer with Gradle
+        shell: bash
+        run: ./gradlew clean jpackage -Papp.version=${{ steps.version.outputs.VERSION }} --no-daemon
+
+      - name: Upload installer
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows-installer
+          path: build/jpackage/*.msi
+          retention-days: 1
+          if-no-files-found: error
+
+  build-linux-installer-and-app-image:
+    name: Build Linux Installer & AppImage
+    runs-on: ubuntu-22.04
+    needs: ci
+
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v4
+
+      - name: Extract version from tag
+        id: version
+        run: echo "VERSION=${GITHUB_REF_NAME#v}" >> "$GITHUB_OUTPUT"
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+
+      - name: Grant execute permission for Gradle wrapper
+        run: chmod +x gradlew
+
+      - name: Create installer with Gradle
+        run: ./gradlew clean jpackage -Papp.version=${{ steps.version.outputs.VERSION }} --no-daemon
+
+      - name: Prepare AppDir for AppImage
+        run: ./gradlew prepareAppDir -Papp.version=${{ steps.version.outputs.VERSION }} --no-daemon
+
+      - name: Install AppImage Tool
+        run: |
+          sudo apt-get install -y libfuse2
+          wget https://github.com/AppImage/appimagetool/releases/download/continuous/appimagetool-x86_64.AppImage -O appimage-tool.AppImage
+          chmod +x appimage-tool.AppImage
+          sudo mv appimage-tool.AppImage /usr/local/bin/appimage-tool
+
+      - name: Build AppImage
+        run: appimage-tool build/AppDir build/VIPET-${{ steps.version.outputs.VERSION }}.AppImage
+
+      - name: Upload installer & AppImage
+        uses: actions/upload-artifact@v4
+        with:
+          name: linux-installer
+          path: |
+            build/jpackage/*.deb
+            build/*.AppImage
+          retention-days: 1
+          if-no-files-found: error
+
+  create-release:
+    name: Create Release
+    runs-on: ubuntu-22.04
+    needs: [ build-windows-installer, build-linux-installer-and-app-image ]
+
+    permissions:
+      contents: write
+
+    steps:
+      - name: Download Windows installer
+        uses: actions/download-artifact@v4
+        with:
+          name: windows-installer
+          path: windows-installer
+
+      - name: Download Ubuntu installer & AppImage
+        uses: actions/download-artifact@v4
+        with:
+          name: linux-installer
+          path: linux-installer
+
+      - name: Checkout release notes
+        uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            relnotes/${{ github.ref_name }}.md
+          path: relnotes-checkout
+          sparse-checkout-cone-mode: false
+          fetch-depth: 1
+
+      - name: Delete previous release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          TAG="${{ github.ref_name }}"
+          REPO="${{ github.repository }}"
+          
+          # Get release by tag
+          HTTP_CODE=$(curl -s -o /tmp/release.json -w "%{http_code}" \
+            -H "Authorization: token $GITHUB_TOKEN" \
+            -H "Accept: application/vnd.github.v3+json" \
+            "https://api.github.com/repos/${REPO}/releases/tags/${TAG}")
+          
+          if [ "$HTTP_CODE" -eq 200 ]; then
+            RELEASE_ID=$(jq -r '.id' /tmp/release.json)
+            echo "Found existing release with ID: ${RELEASE_ID}"
+            
+            # Delete the release
+            DELETE_CODE=$(curl -s -o /dev/null -w "%{http_code}" -X DELETE \
+              -H "Authorization: token $GITHUB_TOKEN" \
+              -H "Accept: application/vnd.github.v3+json" \
+              "https://api.github.com/repos/${REPO}/releases/${RELEASE_ID}")
+            
+            if [ "$DELETE_CODE" -eq 204 ]; then
+              echo "Successfully deleted release ${RELEASE_ID}"
+            else
+              echo "Failed to delete release. HTTP code: ${DELETE_CODE}"
+              exit 1
+            fi
+          elif [ "$HTTP_CODE" -eq 404 ]; then
+            echo "No existing release found for tag ${TAG}"
+          else
+            echo "Error checking for release. HTTP code: ${HTTP_CODE}"
+            cat /tmp/release.json
+            exit 1
+          fi
+
+      - name: Upload installers and AppImage to GitHub Release
+        uses: ncipollo/release-action@v1
+        with:
+          artifacts: |
+            windows-installer/*.msi
+            linux-installer/jpackage/*.deb
+            linux-installer/*.AppImage
+          tag: ${{ github.ref_name }}
+          name: VIPET ${{ github.ref_name }}
+          bodyFile: relnotes-checkout/relnotes/${{ github.ref_name }}.md
+          token: ${{ secrets.GITHUB_TOKEN }}

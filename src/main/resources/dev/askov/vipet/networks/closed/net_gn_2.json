@@ -1,0 +1,86 @@
+{
+  "name": "Једноставна затворена мрежа",
+  "description": "",
+  "nodes": [
+    {
+      "type": "SERVICE_CENTER",
+      "general": {
+        "id": 1,
+        "name": "Сервисни центар 1",
+        "description": "",
+        "position": {
+          "x": 32.0,
+          "y": 54.0
+        },
+        "forwardOrientation": true,
+        "fillColor": "0xcce6ffff",
+        "strokeColor": "0x334db3ff"
+      },
+      "timeDistribution": {
+        "type": "EXPONENTIAL",
+        "parameters": {
+          "rate": 1.0
+        }
+      },
+      "routingStrategy": {
+        "type": "PROBABILITIES",
+        "probabilities": [
+          1.0
+        ]
+      },
+      "service": {
+        "numberOfServers": 1
+      },
+      "queue": {
+        "discipline": "FIFO"
+      }
+    },
+    {
+      "type": "SERVICE_CENTER",
+      "general": {
+        "id": 2,
+        "name": "Сервисни центар 2",
+        "description": "",
+        "position": {
+          "x": 252.0,
+          "y": 32.0
+        },
+        "forwardOrientation": true,
+        "fillColor": "0xcce6ffff",
+        "strokeColor": "0x334db3ff"
+      },
+      "timeDistribution": {
+        "type": "EXPONENTIAL",
+        "parameters": {
+          "rate": 1.0
+        }
+      },
+      "routingStrategy": {
+        "type": "PROBABILITIES",
+        "probabilities": [
+          1.0
+        ]
+      },
+      "service": {
+        "numberOfServers": 2
+      },
+      "queue": {
+        "discipline": "FIFO"
+      }
+    }
+  ],
+  "centralServiceCenterId": 2,
+  "numberOfJobs": 2,
+  "connections": [
+    {
+      "sourceId": 1,
+      "destinationId": 2,
+      "type": "MULTI_SEGMENT"
+    },
+    {
+      "sourceId": 2,
+      "destinationId": 1,
+      "type": "MULTI_SEGMENT"
+    }
+  ]
+}

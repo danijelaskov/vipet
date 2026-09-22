@@ -1,0 +1,32 @@
+.mainAnchorPane {
+    -fx-pref-width: 1000;
+    -fx-pref-height: 600;
+}
+
+.mainVBox {
+    -fx-spacing: 5px;
+}
+
+.h1Label {
+    -fx-margin: 10px;
+    -fx-font-family: "System", serif;
+    -fx-font-weight: bold;
+    -fx-font-size: 35px;
+}
+
+.textLabel {
+    -fx-font-size: 12px;
+    -fx-wrap-text: true;
+}
+
+.h2Label {
+    -fx-margin: 10px;
+    -fx-font-family: "System", serif;
+    -fx-font-weight: bold;
+    -fx-font-size: 25px;
+}
+
+Hyperlink {
+    -fx-font-family: "Consolas", Courier, monospace;
+    -fx-padding: 0px 0px 0px 2px;
+}

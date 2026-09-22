@@ -1,0 +1,63 @@
+[versions]
+# Plugins
+javafx = "0.0.13"
+module = "1.8.12"
+jlink = "3.1.1"
+spotless = "7.0.2"
+
+# Libraries
+jcommander = "1.82"
+gson = "2.10"
+opencsv = "5.9"
+poi = "5.4.0"
+commons-math3 = "3.6"
+slf4j = "2.0.16"
+log4j = "2.24.2"
+ikonli = "12.3.1"
+jlatexmath = "1.0.7"
+junit = "5.11.4"
+
+[plugins]
+javafx = { id = "org.openjfx.javafxplugin", version.ref = "javafx" }
+module = { id = "org.javamodularity.moduleplugin", version.ref = "module" }
+jlink = { id = "org.beryx.jlink", version.ref = "jlink" }
+spotless = { id = "com.diffplug.spotless", version.ref = "spotless" }
+
+[libraries]
+# Command line parsing
+jcommander = { module = "com.beust:jcommander", version.ref = "jcommander" }
+
+# JSON processing
+gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
+
+# CSV processing
+opencsv = { module = "com.opencsv:opencsv", version.ref = "opencsv" }
+
+# Excel processing
+poi = { module = "org.apache.poi:poi", version.ref = "poi" }
+poi-ooxml = { module = "org.apache.poi:poi-ooxml", version.ref = "poi" }
+
+# Math utilities
+commons-math3 = { module = "org.apache.commons:commons-math3", version.ref = "commons-math3" }
+
+# Logging
+slf4j-api = { module = "org.slf4j:slf4j-api", version.ref = "slf4j" }
+log4j-api = { module = "org.apache.logging.log4j:log4j-api", version.ref = "log4j" }
+log4j-core = { module = "org.apache.logging.log4j:log4j-core", version.ref = "log4j" }
+log4j-slf4j2-impl = { module = "org.apache.logging.log4j:log4j-slf4j2-impl", version.ref = "log4j" }
+
+# Icons
+ikonli-javafx = { module = "org.kordamp.ikonli:ikonli-javafx", version.ref = "ikonli" }
+ikonli-core = { module = "org.kordamp.ikonli:ikonli-core", version.ref = "ikonli" }
+ikonli-codicons = { module = "org.kordamp.ikonli:ikonli-codicons-pack", version.ref = "ikonli" }
+ikonli-coreui = { module = "org.kordamp.ikonli:ikonli-coreui-pack", version.ref = "ikonli" }
+ikonli-fluentui = { module = "org.kordamp.ikonli:ikonli-fluentui-pack", version.ref = "ikonli" }
+ikonli-materialdesign2 = { module = "org.kordamp.ikonli:ikonli-materialdesign2-pack", version.ref = "ikonli" }
+ikonli-carbonicons = { module = "org.kordamp.ikonli:ikonli-carbonicons-pack", version.ref = "ikonli" }
+
+# Math rendering
+jlatexmath = { module = "org.scilab.forge:jlatexmath", version.ref = "jlatexmath" }
+
+# Testing
+junit-jupiter-api = { module = "org.junit.jupiter:junit-jupiter-api", version.ref = "junit" }
+junit-jupiter-engine = { module = "org.junit.jupiter:junit-jupiter-engine", version.ref = "junit" }

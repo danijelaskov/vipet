@@ -1,0 +1,19 @@
+# Ignore Gradle output files
+.gradle/
+build/
+
+# VS Code
+bin/
+.classpath
+.project
+.settings/
+.vscode/
+
+# Ignore IDE-specific files
+.idea/
+
+# Logs
+logs/
+
+# Ignore LuaLaTeX output files
+thesis/out/

@@ -1,0 +1,182 @@
+{
+  "name": "Једноставан рачунарски систем - отворена мрежа",
+  "description": "Једноставан рачунарски систем са процесором са три језгра, улазно-излазним уређајем са два контролера и диском.",
+  "nodes": [
+    {
+      "type": "SOURCE",
+      "general": {
+        "id": 1,
+        "name": "Улаз",
+        "description": "",
+        "position": {
+          "x": 35.333333333333336,
+          "y": 241.33333333333334
+        },
+        "forwardOrientation": true,
+        "fillColor": "0xffffffff",
+        "strokeColor": "0x000000ff"
+      },
+      "timeDistribution": {
+        "type": "EXPONENTIAL",
+        "parameters": {
+          "rate": 6.0
+        }
+      },
+      "routingStrategy": {
+        "type": "PROBABILITIES",
+        "probabilities": [
+          1.0
+        ]
+      }
+    },
+    {
+      "type": "SERVICE_CENTER",
+      "general": {
+        "id": 3,
+        "name": "Процесор",
+        "description": "",
+        "position": {
+          "x": 210.66666666666669,
+          "y": 197.33333333333334
+        },
+        "forwardOrientation": true,
+        "fillColor": "0xffccccff",
+        "strokeColor": "0x990000ff"
+      },
+      "timeDistribution": {
+        "type": "EXPONENTIAL",
+        "parameters": {
+          "rate": 6.0
+        }
+      },
+      "routingStrategy": {
+        "type": "PROBABILITIES",
+        "probabilities": [
+          0.1,
+          0.4,
+          0.5
+        ]
+      },
+      "service": {
+        "numberOfServers": 3
+      },
+      "queue": {
+        "discipline": "FIFO"
+      }
+    },
+    {
+      "type": "SERVICE_CENTER",
+      "general": {
+        "id": 5,
+        "name": "Улазно-излазни уређај",
+        "description": "",
+        "position": {
+          "x": 205.0,
+          "y": 32.0
+        },
+        "forwardOrientation": false,
+        "fillColor": "0xccffccff",
+        "strokeColor": "0x003300ff"
+      },
+      "timeDistribution": {
+        "type": "EXPONENTIAL",
+        "parameters": {
+          "rate": 2.0
+        }
+      },
+      "routingStrategy": {
+        "type": "PROBABILITIES",
+        "probabilities": [
+          1.0
+        ]
+      },
+      "service": {
+        "numberOfServers": 2
+      },
+      "queue": {
+        "discipline": "FIFO"
+      }
+    },
+    {
+      "type": "SERVICE_CENTER",
+      "general": {
+        "id": 6,
+        "name": "Диск",
+        "description": "",
+        "position": {
+          "x": 204.66666666666669,
+          "y": 407.00000000000006
+        },
+        "forwardOrientation": false,
+        "fillColor": "0xcce6ffff",
+        "strokeColor": "0x334db3ff"
+      },
+      "timeDistribution": {
+        "type": "EXPONENTIAL",
+        "parameters": {
+          "rate": 5.0
+        }
+      },
+      "routingStrategy": {
+        "type": "PROBABILITIES",
+        "probabilities": [
+          1.0
+        ]
+      },
+      "service": {
+        "numberOfServers": 1
+      },
+      "queue": {
+        "discipline": "FIFO"
+      }
+    },
+    {
+      "type": "SINK",
+      "general": {
+        "id": 17,
+        "name": "Излаз",
+        "description": "",
+        "position": {
+          "x": 439.66666666666663,
+          "y": 241.33333333333334
+        },
+        "forwardOrientation": true,
+        "fillColor": "0xffffffff",
+        "strokeColor": "0x000000ff"
+      }
+    }
+  ],
+  "centralServiceCenterId": 3,
+  "connections": [
+    {
+      "sourceId": 1,
+      "destinationId": 3,
+      "type": "MULTI_SEGMENT"
+    },
+    {
+      "sourceId": 3,
+      "destinationId": 5,
+      "type": "MULTI_SEGMENT"
+    },
+    {
+      "sourceId": 3,
+      "destinationId": 6,
+      "type": "MULTI_SEGMENT"
+    },
+    {
+      "sourceId": 3,
+      "destinationId": 17,
+      "type": "MULTI_SEGMENT"
+    },
+    {
+      "sourceId": 5,
+      "destinationId": 3,
+      "type": "MULTI_SEGMENT"
+    },
+    {
+      "sourceId": 6,
+      "destinationId": 3,
+      "type": "MULTI_SEGMENT"
+    }
+  ]
+}

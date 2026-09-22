@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Hyperlink?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import org.kordamp.ikonli.javafx.FontIcon?>
+
+<AnchorPane styleClass="mainAnchorPane" stylesheets="@../css/about.css" xmlns="http://javafx.com/javafx/21"
+            xmlns:fx="http://javafx.com/fxml/1" fx:controller="dev.askov.vipet.mvc.controllers.AboutController">
+    <VBox styleClass="mainVBox" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+          AnchorPane.topAnchor="0.0">
+        <VBox>
+            <padding>
+                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+            </padding>
+            <Label fx:id="headerLabel" styleClass="h1Label" text="%about.name"/>
+            <Label fx:id="descriptionLabel" styleClass="textLabel" text="%about.description" wrapText="true"/>
+            <Label styleClass="textLabel" text="%about.author"/>
+            <Label styleClass="textLabel" text="%about.mentor"/>
+            <HBox alignment="CENTER_LEFT">
+                <FontIcon iconLiteral="mdi2g-github" iconSize="24">
+                    <HBox.margin>
+                        <Insets right="5.0"/>
+                    </HBox.margin>
+                </FontIcon>
+                <Label alignment="CENTER" styleClass="textLabel" text="%about.officialRepo" wrapText="true"/>
+                <Hyperlink alignment="CENTER" onAction="#onHyperlinkAction" text="%about.repositoryPath"/>
+            </HBox>
+            <Separator/>
+            <Label styleClass="h2Label" text="%about.licence"/>
+            <TextArea fx:id="licenceTextArea"/>
+        </VBox>
+        <Separator>
+            <padding>
+                <Insets left="5.0" right="5.0"/>
+            </padding>
+        </Separator>
+        <Label styleClass="h2Label" text="%about.licences">
+            <VBox.margin>
+                <Insets left="5.0"/>
+            </VBox.margin>
+        </Label>
+        <TabPane fx:id="licencesTabPane" side="BOTTOM" tabClosingPolicy="UNAVAILABLE" VBox.vgrow="ALWAYS"/>
+    </VBox>
+</AnchorPane>

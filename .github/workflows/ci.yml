@@ -1,0 +1,22 @@
+name: CI
+
+on:
+  push:
+    branches: ["main"]
+    paths:
+      - "src/**"
+      - "build.gradle.kts"
+      - "gradle/**"
+      - ".github/workflows/**"
+  pull_request:
+    branches: ["main"]
+    paths:
+      - "src/**"
+      - "build.gradle.kts"
+      - "gradle/**"
+      - ".github/workflows/**"
+
+jobs:
+  ci:
+    name: CI (Shared)
+    uses: ./.github/workflows/ci-shared.yml

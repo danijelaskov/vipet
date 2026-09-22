@@ -1,0 +1,316 @@
+{
+  "name": "Комплексна затворена мрежа",
+  "description": "Затворена мрежа са једним процесором, три системска и два корисничка диска",
+  "nodes": [
+    {
+      "type": "SERVICE_CENTER",
+      "general": {
+        "id": 1,
+        "name": "P",
+        "description": "Процесор",
+        "position": {
+          "x": 158.6748931107174,
+          "y": 542.8152547932773
+        },
+        "fillColor": "0xccffffff",
+        "strokeColor": "0x1a4d4dff"
+      },
+      "timeDistribution": {
+        "type": "EXPONENTIAL",
+        "parameters": {
+          "rate": 200.0
+        }
+      },
+      "routingStrategy": {
+        "type": "PROBABILITIES",
+        "probabilities": [
+          0.2,
+          0.15,
+          0.1,
+          0.05,
+          0.25,
+          0.25
+        ]
+      },
+      "service": {
+        "numberOfServers": 1
+      },
+      "queue": {
+        "discipline": "FIFO"
+      }
+    },
+    {
+      "type": "SERVICE_CENTER",
+      "general": {
+        "id": 2,
+        "name": "SD1",
+        "description": "Први системски диск",
+        "position": {
+          "x": 587.8705367404049,
+          "y": 32.99999694769073
+        },
+        "fillColor": "0xcce6ffff",
+        "strokeColor": "0x001a80ff"
+      },
+      "timeDistribution": {
+        "type": "EXPONENTIAL",
+        "parameters": {
+          "rate": 100.0
+        }
+      },
+      "routingStrategy": {
+        "type": "PROBABILITIES",
+        "probabilities": [
+          0.2,
+          0.25,
+          0.25,
+          0.3
+        ]
+      },
+      "service": {
+        "numberOfServers": 1
+      },
+      "queue": {
+        "discipline": "FIFO"
+      }
+    },
+    {
+      "type": "SERVICE_CENTER",
+      "general": {
+        "id": 3,
+        "name": "SD2",
+        "description": "Други системски диск",
+        "position": {
+          "x": 494.62247600023164,
+          "y": 166.3476447577277
+        },
+        "fillColor": "0xe6ccffff",
+        "strokeColor": "0x1a0068ff"
+      },
+      "timeDistribution": {
+        "type": "EXPONENTIAL",
+        "parameters": {
+          "rate": 66.666666666667
+        }
+      },
+      "routingStrategy": {
+        "type": "PROBABILITIES",
+        "probabilities": [
+          0.2,
+          0.25,
+          0.25,
+          0.3
+        ]
+      },
+      "service": {
+        "numberOfServers": 1
+      },
+      "queue": {
+        "discipline": "FIFO"
+      }
+    },
+    {
+      "type": "SERVICE_CENTER",
+      "general": {
+        "id": 4,
+        "name": "SD3",
+        "description": "Трећи системски диск",
+        "position": {
+          "x": 427.77655867744085,
+          "y": 309.4669174883238
+        },
+        "fillColor": "0xffccccff",
+        "strokeColor": "0x990000ff"
+      },
+      "timeDistribution": {
+        "type": "EXPONENTIAL",
+        "parameters": {
+          "rate": 66.666666666667
+        }
+      },
+      "routingStrategy": {
+        "type": "PROBABILITIES",
+        "probabilities": [
+          0.2,
+          0.25,
+          0.25,
+          0.3
+        ]
+      },
+      "service": {
+        "numberOfServers": 1
+      },
+      "queue": {
+        "discipline": "FIFO"
+      }
+    },
+    {
+      "type": "SERVICE_CENTER",
+      "general": {
+        "id": 5,
+        "name": "KD1",
+        "description": "Први кориснички диск",
+        "position": {
+          "x": 823.8522067363531,
+          "y": 447.09901277584214
+        },
+        "fillColor": "0xffffb3ff",
+        "strokeColor": "0x996600ff"
+      },
+      "timeDistribution": {
+        "type": "EXPONENTIAL",
+        "parameters": {
+          "rate": 40.0
+        }
+      },
+      "routingStrategy": {
+        "type": "PROBABILITIES",
+        "probabilities": [
+          1.0
+        ]
+      },
+      "service": {
+        "numberOfServers": 1
+      },
+      "queue": {
+        "discipline": "FIFO"
+      }
+    },
+    {
+      "type": "SERVICE_CENTER",
+      "general": {
+        "id": 6,
+        "name": "KD2",
+        "description": "Други кориснички диск",
+        "position": {
+          "x": 823.959349593496,
+          "y": 621.3414634146343
+        },
+        "fillColor": "0xccffccff",
+        "strokeColor": "0x003300ff"
+      },
+      "timeDistribution": {
+        "type": "EXPONENTIAL",
+        "parameters": {
+          "rate": 40.0
+        }
+      },
+      "routingStrategy": {
+        "type": "PROBABILITIES",
+        "probabilities": [
+          1.0
+        ]
+      },
+      "service": {
+        "numberOfServers": 1
+      },
+      "queue": {
+        "discipline": "FIFO"
+      }
+    }
+  ],
+  "centralServiceCenterId": 1,
+  "numberOfJobs": 3,
+  "connections": [
+    {
+      "sourceId": 1,
+      "destinationId": 1,
+      "type": "MULTI_SEGMENT"
+    },
+    {
+      "sourceId": 1,
+      "destinationId": 2,
+      "type": "MULTI_SEGMENT"
+    },
+    {
+      "sourceId": 1,
+      "destinationId": 3,
+      "type": "MULTI_SEGMENT"
+    },
+    {
+      "sourceId": 1,
+      "destinationId": 4,
+      "type": "MULTI_SEGMENT"
+    },
+    {
+      "sourceId": 1,
+      "destinationId": 5,
+      "type": "MULTI_SEGMENT"
+    },
+    {
+      "sourceId": 1,
+      "destinationId": 6,
+      "type": "MULTI_SEGMENT"
+    },
+    {
+      "sourceId": 2,
+      "destinationId": 2,
+      "type": "MULTI_SEGMENT"
+    },
+    {
+      "sourceId": 2,
+      "destinationId": 5,
+      "type": "MULTI_SEGMENT"
+    },
+    {
+      "sourceId": 2,
+      "destinationId": 6,
+      "type": "MULTI_SEGMENT"
+    },
+    {
+      "sourceId": 2,
+      "destinationId": 1,
+      "type": "MULTI_SEGMENT"
+    },
+    {
+      "sourceId": 3,
+      "destinationId": 3,
+      "type": "MULTI_SEGMENT"
+    },
+    {
+      "sourceId": 3,
+      "destinationId": 5,
+      "type": "MULTI_SEGMENT"
+    },
+    {
+      "sourceId": 3,
+      "destinationId": 6,
+      "type": "MULTI_SEGMENT"
+    },
+    {
+      "sourceId": 3,
+      "destinationId": 1,
+      "type": "MULTI_SEGMENT"
+    },
+    {
+      "sourceId": 4,
+      "destinationId": 4,
+      "type": "MULTI_SEGMENT"
+    },
+    {
+      "sourceId": 4,
+      "destinationId": 5,
+      "type": "MULTI_SEGMENT"
+    },
+    {
+      "sourceId": 4,
+      "destinationId": 6,
+      "type": "MULTI_SEGMENT"
+    },
+    {
+      "sourceId": 4,
+      "destinationId": 1,
+      "type": "MULTI_SEGMENT"
+    },
+    {
+      "sourceId": 5,
+      "destinationId": 1,
+      "type": "MULTI_SEGMENT"
+    },
+    {
+      "sourceId": 6,
+      "destinationId": 1,
+      "type": "MULTI_SEGMENT"
+    }
+  ]
+}

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.Spinner?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox alignment="CENTER" spacing="10.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="dev.askov.vipet.mvc.controllers.GuidedDiscreteEventDrivenSimulationController">
+    <padding>
+        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+    </padding>
+    <GridPane alignment="CENTER">
+        <columnConstraints>
+            <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES"/>
+            <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES"/>
+        </columnConstraints>
+        <rowConstraints>
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+        </rowConstraints>
+        <Label text="%guidedDiscreteEventDrivenSimulation.time"/>
+        <Label text="%guidedDiscreteEventDrivenSimulation.currentEvent" GridPane.rowIndex="1"/>
+        <Label fx:id="currentTimeLabel" GridPane.columnIndex="1"/>
+        <Label fx:id="currentEventLabel" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+    </GridPane>
+    <Separator prefWidth="200.0"/>
+    <HBox fx:id="simulationControlsHBox" alignment="CENTER" spacing="10.0">
+        <Button fx:id="nextEventButton" alignment="CENTER" mnemonicParsing="false" onAction="#onNextEvent"
+                text="%guidedDiscreteEventDrivenSimulation.nextEvent"/>
+        <Button fx:id="skipEventsButton" alignment="CENTER" mnemonicParsing="false" onAction="#onSkipEvents"
+                text="%guidedDiscreteEventDrivenSimulation.skip"/>
+        <Spinner fx:id="numberOfEventsToSkipSpinner" editable="true" prefWidth="100.0"/>
+        <Label alignment="CENTER" text="%guidedDiscreteEventDrivenSimulation.events"/>
+        <Separator orientation="VERTICAL"/>
+        <Button fx:id="endButton" mnemonicParsing="false" onAction="#onSkipAllRemainingEvents"
+                text="%guidedDiscreteEventDrivenSimulation.end"/>
+    </HBox>
+</VBox>

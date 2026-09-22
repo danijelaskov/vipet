@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox alignment="CENTER" spacing="5.0" xmlns="http://javafx.com/javafx/21"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="dev.askov.vipet.mvc.controllers.distributions.TimeDistributionDetailsController">
+    <TabPane side="BOTTOM" VBox.vgrow="ALWAYS">
+        <Tab closable="false" text="%timeDistributionProperties.probabilityDensityFunction">
+            <VBox alignment="CENTER">
+                <ImageView fx:id="pdfEquationImageView" pickOnBounds="true" preserveRatio="true">
+                    <VBox.margin>
+                        <Insets bottom="5.0" top="5.0"/>
+                    </VBox.margin>
+                </ImageView>
+            </VBox>
+        </Tab>
+        <Tab closable="false" text="%timeDistributionProperties.cumulativeDistributionFunction">
+            <VBox alignment="CENTER">
+                <ImageView fx:id="cdfEquationImageView" pickOnBounds="true" preserveRatio="true">
+                    <VBox.margin>
+                        <Insets bottom="5.0" top="5.0"/>
+                    </VBox.margin>
+                </ImageView>
+            </VBox>
+        </Tab>
+    </TabPane>
+</VBox>

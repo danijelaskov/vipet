@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.chart.BarChart?>
+<?import javafx.scene.chart.CategoryAxis?>
+<?import javafx.scene.chart.NumberAxis?>
+<?import javafx.scene.control.Accordion?>
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.TitledPane?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<AnchorPane xmlns="http://javafx.com/javafx/21"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="dev.askov.vipet.mvc.controllers.analysis.JacksonNetworkAnalysisController"
+            stylesheets="@../css/main.css">
+    <SplitPane dividerPositions="0.5" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
+               AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <AnchorPane>
+            <ScrollPane fitToHeight="true" fitToWidth="true" AnchorPane.bottomAnchor="0.0"
+                        AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                <padding>
+                    <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
+                </padding>
+                <VBox alignment="CENTER_LEFT" spacing="20.0">
+                    <ImageView fx:id="step1ImageView" fitHeight="10.0" fitWidth="50.0"
+                               pickOnBounds="true" preserveRatio="true"/>
+                    <ImageView fx:id="step2ImageView" fitHeight="10.0" fitWidth="50.0"
+                               pickOnBounds="true" preserveRatio="true"/>
+                    <ImageView fx:id="step3ImageView" fitHeight="10.0" fitWidth="50.0"
+                               pickOnBounds="true" preserveRatio="true"/>
+                    <ImageView fx:id="step4ImageView" fitHeight="10.0" fitWidth="50.0"
+                               pickOnBounds="true" preserveRatio="true"/>
+                    <ImageView fx:id="step5ImageView" fitHeight="10.0" fitWidth="50.0"
+                               pickOnBounds="true" preserveRatio="true"/>
+                </VBox>
+            </ScrollPane>
+        </AnchorPane>
+        <AnchorPane>
+            <VBox alignment="CENTER" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
+                  AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                <HBox alignment="CENTER" spacing="10.0">
+                    <VBox.margin>
+                        <Insets bottom="10.0" top="10.0"/>
+                    </VBox.margin>
+                    <Label text="%analysis.serviceCenter" HBox.hgrow="ALWAYS"/>
+                    <ChoiceBox fx:id="serviceCenterChoiceBox" prefWidth="200.0"
+                               HBox.hgrow="ALWAYS"/>
+                </HBox>
+                <Separator/>
+                <Accordion fx:id="jacksonNetworkAnalysisAccordion" VBox.vgrow="ALWAYS">
+                    <panes>
+                        <TitledPane fx:id="calculationTitledPane" contentDisplay="CENTER"
+                                    text="%analysis.performanceMeasuresCalculation" textAlignment="CENTER">
+                            <ScrollPane fitToHeight="true" fitToWidth="true">
+                                <AnchorPane>
+                                    <VBox fx:id="performanceMeasuresCalculationsVBox"
+                                          alignment="CENTER" spacing="10.0"
+                                          AnchorPane.bottomAnchor="5.0"
+                                          AnchorPane.leftAnchor="5.0"
+                                          AnchorPane.rightAnchor="5.0"
+                                          AnchorPane.topAnchor="5.0">
+                                        <ImageView fx:id="numberOfServersImageView"
+                                                   fitHeight="10.0" fitWidth="50.0"
+                                                   pickOnBounds="true"
+                                                   preserveRatio="true"/>
+                                        <ImageView fx:id="serviceSpeedImageView"
+                                                   fitHeight="10.0" fitWidth="50.0"
+                                                   pickOnBounds="true"
+                                                   preserveRatio="true"/>
+                                        <ImageView fx:id="rhoImageView" fitHeight="10.0"
+                                                   fitWidth="50.0" pickOnBounds="true"
+                                                   preserveRatio="true"/>
+                                        <ImageView fx:id="pi0ImageView" fitHeight="10.0"
+                                                   fitWidth="50.0" pickOnBounds="true"
+                                                   preserveRatio="true">
+                                            <VBox.margin>
+                                                <Insets bottom="10.0"/>
+                                            </VBox.margin>
+                                        </ImageView>
+                                        <Separator/>
+                                        <ImageView fx:id="performanceMeasure1ImageView"
+                                                   fitHeight="10.0" fitWidth="50.0"
+                                                   pickOnBounds="true"
+                                                   preserveRatio="true"/>
+                                        <ImageView fx:id="performanceMeasure2ImageView"
+                                                   fitHeight="10.0" fitWidth="50.0"
+                                                   pickOnBounds="true"
+                                                   preserveRatio="true"/>
+                                        <ImageView fx:id="performanceMeasure3ImageView"
+                                                   fitHeight="10.0" fitWidth="50.0"
+                                                   pickOnBounds="true"
+                                                   preserveRatio="true"/>
+                                        <ImageView fx:id="performanceMeasure4ImageView"
+                                                   fitHeight="10.0" fitWidth="50.0"
+                                                   pickOnBounds="true"
+                                                   preserveRatio="true"/>
+                                        <ImageView fx:id="performanceMeasure5ImageView"
+                                                   fitHeight="10.0" fitWidth="50.0"
+                                                   pickOnBounds="true"
+                                                   preserveRatio="true"/>
+                                        <ImageView fx:id="performanceMeasure6ImageView"
+                                                   fitHeight="10.0" fitWidth="50.0"
+                                                   pickOnBounds="true"
+                                                   preserveRatio="true"/>
+                                    </VBox>
+                                </AnchorPane>
+                            </ScrollPane>
+                        </TitledPane>
+                        <TitledPane expanded="false" text="%analysis.stateProbabilities">
+                            <AnchorPane>
+                                <BarChart fx:id="stateProbabilityBarChart" animated="false"
+                                          legendVisible="false" AnchorPane.bottomAnchor="0.0"
+                                          AnchorPane.leftAnchor="0.0"
+                                          AnchorPane.rightAnchor="0.0"
+                                          AnchorPane.topAnchor="0.0">
+                                    <xAxis>
+                                        <CategoryAxis label="%analysis.numberOfJobs" side="BOTTOM"/>
+                                    </xAxis>
+                                    <yAxis>
+                                        <NumberAxis fx:id="probabilityNumberAxis"
+                                                    label="%analysis.probability" side="LEFT"/>
+                                    </yAxis>
+                                </BarChart>
+                            </AnchorPane>
+                        </TitledPane>
+                    </panes>
+                </Accordion>
+            </VBox>
+        </AnchorPane>
+    </SplitPane>
+</AnchorPane>

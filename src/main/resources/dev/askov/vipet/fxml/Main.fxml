@@ -1,0 +1,251 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.SeparatorMenuItem?>
+<?import javafx.scene.control.SplitMenuButton?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.ToggleButton?>
+<?import javafx.scene.control.ToolBar?>
+<?import javafx.scene.control.Tooltip?>
+<?import javafx.scene.input.KeyCodeCombination?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import org.kordamp.ikonli.javafx.FontIcon?>
+
+<VBox fx:id="rootVBox" stylesheets="@../css/main.css" xmlns="http://javafx.com/javafx/21"
+      xmlns:fx="http://javafx.com/fxml/1" fx:controller="dev.askov.vipet.mvc.controllers.MainController">
+    <MenuBar>
+        <Menu fx:id="fileMenu" mnemonicParsing="false" onShowing="#onMenuShowing" text="%main.menuBar.file">
+            <MenuItem fx:id="newMenuItem" mnemonicParsing="false" onAction="#onNew" text="%main.menuBar.file.new">
+                <graphic>
+                    <FontIcon iconLiteral="codicon-new-file" iconSize="24" styleClass="menu-item-icon"/>
+                </graphic>
+                <accelerator>
+                    <KeyCodeCombination alt="UP" code="N" control="UP" meta="UP" shift="UP" shortcut="DOWN"/>
+                </accelerator>
+            </MenuItem>
+            <MenuItem fx:id="openMenuItem" mnemonicParsing="false" onAction="#onOpen" text="%main.menuBar.file.open">
+                <graphic>
+                    <FontIcon iconLiteral="codicon-folder-opened" iconSize="24" styleClass="menu-item-icon"/>
+                </graphic>
+                <accelerator>
+                    <KeyCodeCombination alt="UP" code="O" control="UP" meta="UP" shift="UP" shortcut="DOWN"/>
+                </accelerator>
+            </MenuItem>
+            <Menu fx:id="recentNetworksMenu" disable="true" mnemonicParsing="false"
+                  text="%main.menuBar.file.recentNetworks">
+                <graphic>
+                    <FontIcon iconLiteral="codicon-history" iconSize="24" styleClass="menu-item-icon"/>
+                </graphic>
+            </Menu>
+            <SeparatorMenuItem mnemonicParsing="false"/>
+            <MenuItem fx:id="saveMenuItem" mnemonicParsing="false" onAction="#onSave" text="%main.menuBar.file.save">
+                <graphic>
+                    <FontIcon iconLiteral="codicon-save" iconSize="24" styleClass="menu-item-icon"/>
+                </graphic>
+                <accelerator>
+                    <KeyCodeCombination alt="UP" code="S" control="UP" meta="UP" shift="UP" shortcut="DOWN"/>
+                </accelerator>
+            </MenuItem>
+            <MenuItem fx:id="saveAsMenuItem" mnemonicParsing="false" onAction="#onSaveAs"
+                      text="%main.menuBar.file.saveAs">
+                <graphic>
+                    <FontIcon iconLiteral="codicon-save-all" iconSize="24" styleClass="menu-item-icon"/>
+                </graphic>
+                <accelerator>
+                    <KeyCodeCombination alt="UP" code="S" control="UP" meta="UP" shift="DOWN" shortcut="DOWN"/>
+                </accelerator>
+            </MenuItem>
+            <MenuItem fx:id="revertToSavedMenuItem" mnemonicParsing="false" onAction="#onRevertToSaved"
+                      text="%main.menuBar.file.revertToSaved">
+                <graphic>
+                    <FontIcon iconLiteral="codicon-history" iconSize="24" styleClass="menu-item-icon"/>
+                </graphic>
+            </MenuItem>
+            <SeparatorMenuItem mnemonicParsing="false"/>
+            <MenuItem fx:id="saveScreenshotAsMenuItem" mnemonicParsing="false" onAction="#onSaveScreenshotAs"
+                      text="%main.menuBar.file.saveScreenshotAs">
+                <graphic>
+                    <FontIcon iconLiteral="codicon-file-media" iconSize="24" styleClass="menu-item-icon"/>
+                </graphic>
+                <accelerator>
+                    <KeyCodeCombination alt="UP" code="E" control="UP" meta="UP" shift="UP" shortcut="DOWN"/>
+                </accelerator>
+            </MenuItem>
+            <SeparatorMenuItem mnemonicParsing="false"/>
+            <MenuItem fx:id="exitMenuItem" mnemonicParsing="false" onAction="#onExit" text="%main.menuBar.file.exit">
+                <graphic>
+                    <FontIcon iconLiteral="codicon-close" iconSize="24" styleClass="menu-item-icon"/>
+                </graphic>
+                <accelerator>
+                    <KeyCodeCombination alt="UP" code="Q" control="UP" meta="UP" shift="UP" shortcut="DOWN"/>
+                </accelerator>
+            </MenuItem>
+        </Menu>
+        <Menu fx:id="editMenu" mnemonicParsing="false" onShowing="#onMenuShowing" text="%main.menuBar.edit">
+            <Menu fx:id="selectedNetworkElementMenu" mnemonicParsing="false"
+                  text="%main.menuBar.edit.selectedNetworkElement"/>
+            <MenuItem fx:id="networkMenuItem" mnemonicParsing="false" onAction="#onEdit"
+                      text="%main.menuBar.edit.network">
+                <graphic>
+                    <FontIcon iconLiteral="cil-graph" iconSize="24" styleClass="menu-item-icon"/>
+                </graphic>
+                <accelerator>
+                    <KeyCodeCombination alt="UP" code="P" control="UP" meta="UP" shift="DOWN" shortcut="DOWN"/>
+                </accelerator>
+            </MenuItem>
+        </Menu>
+        <Menu fx:id="settingsMenu" mnemonicParsing="false" onShowing="#onMenuShowing" text="%main.menuBar.settings">
+            <Menu fx:id="languageMenu" mnemonicParsing="false" text="%main.menuBar.settings.language">
+                <graphic>
+                    <FontIcon iconLiteral="codicon-globe" iconSize="24" styleClass="menu-item-icon"/>
+                </graphic>
+            </Menu>
+        </Menu>
+        <Menu fx:id="helpMenu" mnemonicParsing="false" onShowing="#onMenuShowing" text="%main.menuBar.help">
+            <MenuItem fx:id="aboutMenuItem" mnemonicParsing="false" onAction="#onAbout" text="%main.menuBar.help.about">
+                <graphic>
+                    <FontIcon iconLiteral="codicon-info" iconSize="24" styleClass="menu-item-icon"/>
+                </graphic>
+            </MenuItem>
+        </Menu>
+    </MenuBar>
+    <ToolBar fx:id="toolBar" VBox.vgrow="ALWAYS">
+        <VBox alignment="CENTER" spacing="5.0">
+            <HBox alignment="CENTER" spacing="5.0">
+                <ToggleButton fx:id="newSourceToggleButton" minHeight="30.0" mnemonicParsing="false"
+                              onAction="#onNewSource" text="%main.toolBar.network.newSource">
+                    <graphic>
+                        <FontIcon iconLiteral="mdi2l-location-enter" iconSize="24"/>
+                    </graphic>
+                    <tooltip>
+                        <Tooltip text="%main.toolBar.network.newSource"/>
+                    </tooltip>
+                </ToggleButton>
+                <ToggleButton fx:id="newServiceCenterToggleButton" minHeight="30.0" mnemonicParsing="false"
+                              onAction="#onNewServiceCenter" text="%main.toolBar.network.newServiceCenter">
+                    <graphic>
+                        <FontIcon iconLiteral="mdi2m-moon-new" iconSize="24"/>
+                    </graphic>
+                    <tooltip>
+                        <Tooltip text="%main.toolBar.network.newServiceCenter"/>
+                    </tooltip>
+                </ToggleButton>
+                <ToggleButton fx:id="newSinkToggleButton" minHeight="30.0" mnemonicParsing="false" onAction="#onNewSink"
+                              text="%main.toolBar.network.newSink">
+                    <graphic>
+                        <FontIcon iconLiteral="mdi2l-location-exit" iconSize="24"/>
+                    </graphic>
+                    <tooltip>
+                        <Tooltip text="%main.toolBar.network.newSink"/>
+                    </tooltip>
+                </ToggleButton>
+                <ToggleButton fx:id="newConnectionToggleButton" minHeight="30.0" mnemonicParsing="false"
+                              onAction="#onNewConnection" text="%main.toolBar.network.newConnection">
+                    <graphic>
+                        <FontIcon iconLiteral="mdi2r-ray-start-end" iconSize="24"/>
+                    </graphic>
+                    <tooltip>
+                        <Tooltip text="%main.toolBar.network.newConnection"/>
+                    </tooltip>
+                </ToggleButton>
+            </HBox>
+            <Label fx:id="networkLabel" alignment="CENTER" contentDisplay="CENTER" text="%main.toolBar.network"/>
+        </VBox>
+        <Separator orientation="VERTICAL" prefHeight="0.0" prefWidth="0.0">
+            <padding>
+                <Insets left="10.0" right="10.0"/>
+            </padding>
+        </Separator>
+        <VBox alignment="CENTER" spacing="5.0">
+            <HBox alignment="CENTER" spacing="5.0">
+                <Button fx:id="simulatorParametersButton" minHeight="30.0" mnemonicParsing="false"
+                        onAction="#onSimulatorParameters" text="%main.toolBar.simulation.parameters">
+                    <graphic>
+                        <FontIcon iconLiteral="codicon-settings" iconSize="24"/>
+                    </graphic>
+                </Button>
+                <SplitMenuButton fx:id="startSimulatorSplitMenuButton" mnemonicParsing="false"
+                                 onAction="#onSimulatorStart">
+                    <items>
+                        <MenuItem fx:id="automaticSimulatorMenuItem" mnemonicParsing="false"
+                                  onAction="#onAutomaticSimulator" text="%main.toolBar.simulation.start.automatic">
+                            <graphic>
+                                <FontIcon fx:id="startAutomaticSimulatorFontIcon" iconLiteral="cil-media-skip-forward"
+                                          iconSize="24"/>
+                            </graphic>
+                        </MenuItem>
+                        <MenuItem fx:id="guidedSimulatorMenuItem" mnemonicParsing="false" onAction="#onGuidedSimulator"
+                                  text="%main.toolBar.simulation.start.guided">
+                            <graphic>
+                                <FontIcon fx:id="startGuidedSimulatorFontIcon" iconLiteral="cil-media-play"
+                                          iconSize="24"/>
+                            </graphic>
+                        </MenuItem>
+                    </items>
+                    <graphic>
+                        <FontIcon fx:id="startSimulatorFontIcon" iconLiteral="cil-media-skip-forward" iconSize="24"/>
+                    </graphic>
+                    <tooltip>
+                        <Tooltip text="%main.toolBar.simulation.start.automatic.tooltip"/>
+                    </tooltip>
+                </SplitMenuButton>
+                <Button fx:id="exportSamplesButton" disable="true" minHeight="30.0" mnemonicParsing="false"
+                        onAction="#onExportSamples" text="%main.toolBar.simulation.exportSamples">
+                    <graphic>
+                        <FontIcon iconLiteral="mdi2f-file-export-outline" iconSize="24"/>
+                    </graphic>
+                </Button>
+                <Button fx:id="simulationResultsButton" disable="true" minHeight="30.0" mnemonicParsing="false"
+                        onAction="#onSimulationResults" text="%main.toolBar.simulation.results">
+                    <graphic>
+                        <FontIcon iconLiteral="mdi2c-chart-bar" iconSize="24"/>
+                    </graphic>
+                </Button>
+                <Button fx:id="whatIfSimulationButton" minHeight="30.0" mnemonicParsing="false"
+                        onAction="#onWhatIfSimulation" text="%main.toolBar.simulation.whatIf">
+                    <graphic>
+                        <FontIcon iconLiteral="mdi2c-chart-line" iconSize="24"/>
+                    </graphic>
+                </Button>
+            </HBox>
+            <Label fx:id="simulationLabel" alignment="CENTER" contentDisplay="CENTER" text="%main.toolBar.simulation"/>
+        </VBox>
+        <Separator orientation="VERTICAL" prefHeight="0.0" prefWidth="0.0">
+            <padding>
+                <Insets left="10.0" right="10.0"/>
+            </padding>
+        </Separator>
+        <VBox alignment="CENTER" spacing="5.0">
+            <HBox alignment="CENTER" spacing="5.0">
+                <Button fx:id="analyzeButton" minHeight="30.0" mnemonicParsing="false" onAction="#onAnalyze"
+                        text="%main.toolBar.analysis.start">
+                    <graphic>
+                        <FontIcon iconLiteral="codicon-symbol-operator" iconSize="24"/>
+                    </graphic>
+                </Button>
+                <Button fx:id="analysisResultsButton" minHeight="30.0" mnemonicParsing="false"
+                        onAction="#onAnalysisResults" text="%main.toolBar.analysis.results">
+                    <graphic>
+                        <FontIcon iconLiteral="mdi2c-chart-bar" iconSize="24"/>
+                    </graphic>
+                </Button>
+                <Button fx:id="whatIfAnalysisButton" minHeight="30.0" mnemonicParsing="false"
+                        onAction="#onWhatIfAnalysis" text="%main.toolBar.analysis.whatIf">
+                    <graphic>
+                        <FontIcon iconLiteral="mdi2c-chart-line" iconSize="24"/>
+                    </graphic>
+                </Button>
+            </HBox>
+            <Label fx:id="analysisLabel" alignment="CENTER" contentDisplay="CENTER" text="%main.toolBar.analysis"/>
+        </VBox>
+    </ToolBar>
+    <TabPane fx:id="networkEditorTabPane" focusTraversable="false" prefHeight="400.0" prefWidth="1200.0"
+             VBox.vgrow="ALWAYS"/>
+</VBox>

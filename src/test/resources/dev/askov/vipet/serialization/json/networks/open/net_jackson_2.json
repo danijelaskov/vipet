@@ -1,0 +1,213 @@
+{
+  "name": "Пример 7.4.",
+  "description": "Ово је мрежа из Примера 7.4. на 345. страни књиге \"Queueing Networks and Markov Chains - Modeling and Performance Evaluation with Computer Science Applications\" аутора Gunter Bolch, Stefan Greiner, Hermann de Meer и Kishor S. Trivedi.",
+  "nodes": [
+    {
+      "type": "SOURCE",
+      "general": {
+        "id": 1,
+        "name": "Source",
+        "description": "",
+        "position": {
+          "x": 10.951456310679646,
+          "y": 151.0
+        },
+        "fillColor": "0xccffccff",
+        "strokeColor": "0x336633ff"
+      },
+      "timeDistribution": {
+        "type": "EXPONENTIAL",
+        "parameters": {
+          "rate": 4.0
+        }
+      },
+      "routingStrategy": {
+        "type": "PROBABILITIES",
+        "probabilities": [
+          1.0
+        ]
+      }
+    },
+    {
+      "type": "SERVICE_CENTER",
+      "general": {
+        "id": 2,
+        "name": "CPU",
+        "description": "",
+        "position": {
+          "x": 360.0,
+          "y": 151.0
+        },
+        "fillColor": "0xcce6ffff",
+        "strokeColor": "0x334db3ff"
+      },
+      "timeDistribution": {
+        "type": "EXPONENTIAL",
+        "parameters": {
+          "rate": 25.0
+        }
+      },
+      "routingStrategy": {
+        "type": "PROBABILITIES",
+        "probabilities": [
+          0.5,
+          0.5
+        ]
+      },
+      "service": {
+        "numberOfServers": 1
+      },
+      "queue": {
+        "discipline": "FIFO"
+      }
+    },
+    {
+      "type": "SERVICE_CENTER",
+      "general": {
+        "id": 3,
+        "name": "Printer",
+        "description": "",
+        "position": {
+          "x": 660.0,
+          "y": 57.0
+        },
+        "fillColor": "0xcce6ffff",
+        "strokeColor": "0x334db3ff"
+      },
+      "timeDistribution": {
+        "type": "EXPONENTIAL",
+        "parameters": {
+          "rate": 33.333333333333336
+        }
+      },
+      "routingStrategy": {
+        "type": "PROBABILITIES",
+        "probabilities": [
+          1.0
+        ]
+      },
+      "service": {
+        "numberOfServers": 1
+      },
+      "queue": {
+        "discipline": "FIFO"
+      }
+    },
+    {
+      "type": "SERVICE_CENTER",
+      "general": {
+        "id": 4,
+        "name": "Disk",
+        "description": "",
+        "position": {
+          "x": 679.0,
+          "y": 275.0
+        },
+        "fillColor": "0xcce6ffff",
+        "strokeColor": "0x334db3ff"
+      },
+      "timeDistribution": {
+        "type": "EXPONENTIAL",
+        "parameters": {
+          "rate": 16.666666666666668
+        }
+      },
+      "routingStrategy": {
+        "type": "PROBABILITIES",
+        "probabilities": [
+          0.6,
+          0.4
+        ]
+      },
+      "service": {
+        "numberOfServers": 1
+      },
+      "queue": {
+        "discipline": "FIFO"
+      }
+    },
+    {
+      "type": "SINK",
+      "general": {
+        "id": 5,
+        "name": "Sink",
+        "description": "",
+        "position": {
+          "x": 911.3009708737864,
+          "y": 275.0
+        },
+        "fillColor": "0xffccccff",
+        "strokeColor": "0xcc3333ff"
+      }
+    },
+    {
+      "type": "SERVICE_CENTER",
+      "general": {
+        "id": 6,
+        "name": "I/O-Device",
+        "description": "",
+        "position": {
+          "x": 142.46601941747576,
+          "y": 151.24271844660194
+        },
+        "fillColor": "0xcce6ffff",
+        "strokeColor": "0x334db3ff"
+      },
+      "timeDistribution": {
+        "type": "EXPONENTIAL",
+        "parameters": {
+          "rate": 20.0
+        }
+      },
+      "routingStrategy": {
+        "type": "PROBABILITIES",
+        "probabilities": [
+          1.0
+        ]
+      },
+      "service": {
+        "numberOfServers": 1
+      },
+      "queue": {
+        "discipline": "FIFO"
+      }
+    }
+  ],
+  "connections": [
+    {
+      "sourceId": 1,
+      "destinationId": 6,
+      "type": "MULTI_SEGMENT"
+    },
+    {
+      "sourceId": 2,
+      "destinationId": 3,
+      "type": "MULTI_SEGMENT"
+    },
+    {
+      "sourceId": 2,
+      "destinationId": 4,
+      "type": "MULTI_SEGMENT"
+    },
+    {
+      "sourceId": 3,
+      "destinationId": 2,
+      "type": "MULTI_SEGMENT"
+    },
+    {
+      "sourceId": 4,
+      "destinationId": 2,
+      "type": "MULTI_SEGMENT"
+    },
+    {
+      "sourceId": 4,
+      "destinationId": 5,
+      "type": "MULTI_SEGMENT"
+    },
+    {
+      "sourceId": 6,
+      "destinationId": 2,
+      "type": "MULTI_SEGMENT"
+    }
+  ]
+}

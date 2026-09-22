@@ -1,0 +1,22 @@
+/* All table cells (including the ones containing text fields) should be centered. */
+.table-cell {
+    -fx-alignment: CENTER;
+}
+.table-row-cell .text-field {
+    -fx-alignment: CENTER;
+}
+
+/* All spinner text fields should be centered. */
+.spinner > .text-field {
+    -fx-alignment: CENTER;
+}
+
+/* Errors */
+.error-hbox:hover {
+    -fx-background-color: #f8d7da;
+}
+
+/* More space between the axis label and the ticks. */
+.axis:left  > .axis-label {
+    -fx-translate-x: -15;
+}
