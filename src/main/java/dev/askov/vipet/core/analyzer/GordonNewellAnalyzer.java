@@ -51,6 +51,8 @@ public final class GordonNewellAnalyzer extends Analyzer<GordonNewellAnalysisMod
         updateProgress(0.0, 1.0);
         setStartTime(System.nanoTime());
 
+        gVectorForExcludedServiceCenter.clear();
+
         final var centralServiceCenterModel = getNetworkModel().getCentralServiceCenterModel();
         final List<ServiceCenterModel> serviceCenterModels =
             getNetworkModel().getServiceCenterModels();
