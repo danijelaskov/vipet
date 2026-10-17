@@ -138,6 +138,16 @@ something fits, open an issue first and let's talk it through. Don't be shy abou
 If VIPET is useful to you, please ⭐ [star the repository](https://github.com/danijelaskov/vipet) — it helps
 other people find the project.
 
+## Background
+
+VIPET was developed as part of a BSc thesis at the University of Belgrade, School of Electrical Engineering
+(in Serbian), which describes its design, the analytical methods and the simulation engine.
+Release [v1.0.0](https://github.com/danijelaskov/vipet/releases/tag/v1.0.0) is the version described there.
+
+> Askov, D. (2026). *Implementation of an Interactive Tool with a Graphical User Interface for Evaluation of
+> System Performance Measures* [BSc thesis, University of Belgrade, School of Electrical Engineering].
+> https://doi.org/10.5281/zenodo.23438279
+
 ## License
 
 Licensed under the [GNU General Public License v3.0](LICENSE).
