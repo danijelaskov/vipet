@@ -59,5 +59,6 @@ ikonli-carbonicons = { module = "org.kordamp.ikonli:ikonli-carbonicons-pack", ve
 jlatexmath = { module = "org.scilab.forge:jlatexmath", version.ref = "jlatexmath" }
 
 # Testing
-junit-jupiter-api = { module = "org.junit.jupiter:junit-jupiter-api", version.ref = "junit" }
-junit-jupiter-engine = { module = "org.junit.jupiter:junit-jupiter-engine", version.ref = "junit" }
+junit-bom = { module = "org.junit:junit-bom", version.ref = "junit" }
+junit-jupiter = { module = "org.junit.jupiter:junit-jupiter" }
+junit-platform-launcher = { module = "org.junit.platform:junit-platform-launcher" }
