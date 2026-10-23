@@ -1,0 +1,7 @@
+# Gradle wrapper scripts must keep their platform-specific line endings:
+# gradlew is stored and checked out with LF, *.bat files are kept as committed (CRLF)
+gradlew     text eol=lf
+*.bat       -text
+
+# Binary files
+*.jar       binary

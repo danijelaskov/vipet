@@ -27,9 +27,6 @@ jobs:
           java-version: '21'
           distribution: 'temurin'
 
-      - name: Grant execute permission for Gradle wrapper
-        run: chmod +x gradlew
-
       - name: Generate and submit dependency graph
         uses: gradle/actions/dependency-submission@v6
         with:
