@@ -88,7 +88,7 @@ tasks.test {
 tasks.jar {
     manifest {
         attributes(
-            "Main-Class" to "net.askov.vipet.Main"
+            "Main-Class" to "${project.property("app.reverseDomain")}.Main"
         )
     }
     from("$rootDir/licenses") {
