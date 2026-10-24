@@ -31,7 +31,9 @@ public abstract class ExcelPerformanceMeasuresExporter extends PerformanceMeasur
   public boolean export() {
     try (final var workbook = createWorkbook();
         final OutputStream outputStream = new FileOutputStream(file)) {
-      final var sheet = workbook.createSheet(localizationBundle.getString("excel.sheetTitle"));
+      final var sheet =
+          workbook.createSheet(
+              localizationBundle.getString("performanceMeasures.excel.sheetTitle"));
 
       final List<PerformanceMeasureType> performanceMeasureTypes = new LinkedList<>();
 
@@ -49,7 +51,7 @@ public abstract class ExcelPerformanceMeasuresExporter extends PerformanceMeasur
 
       final var firstHeaderCell = headerRow.createCell(0, CellType.STRING);
 
-      firstHeaderCell.setCellValue(localizationBundle.getString("name"));
+      firstHeaderCell.setCellValue(localizationBundle.getString("performanceMeasures.name"));
       firstHeaderCell.setCellStyle(centeredCellStyle);
 
       sheet.setColumnWidth(0, COLUMN_WIDTH);
@@ -98,7 +100,7 @@ public abstract class ExcelPerformanceMeasuresExporter extends PerformanceMeasur
       final var row = sheet.createRow(rowIndex);
       final var firstCell = row.createCell(0, CellType.STRING);
 
-      firstCell.setCellValue(localizationBundle.getString("system"));
+      firstCell.setCellValue(localizationBundle.getString("performanceMeasures.system"));
       firstCell.setCellStyle(centeredCellStyle);
 
       columnIndex = 1;
