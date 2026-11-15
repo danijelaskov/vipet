@@ -23,7 +23,7 @@ public final class GordonNewellAnalyzer extends Analyzer<GordonNewellAnalysisMod
 
   private RealMatrix k1Matrix;
   private RealMatrix k2Matrix;
-  private RealVector visitRatios;
+  private RealVector visitRatioVector;
   private RealMatrix fMatrix;
   private RealMatrix gMatrix;
   private RealVector gVector;
@@ -106,27 +106,16 @@ public final class GordonNewellAnalyzer extends Analyzer<GordonNewellAnalysisMod
         final var visitRatiosSubVector =
             new QRDecomposition(k1Matrix).getSolver().solve(probabilitySubVector);
 
-        visitRatios = new ArrayRealVector(numberOfServiceCenters);
-        visitRatios.setEntry(centralServiceCenterIndex, 1.0);
+        visitRatioVector = new ArrayRealVector(numberOfServiceCenters);
+        visitRatioVector.setEntry(centralServiceCenterIndex, 1.0);
         for (var i = 0; i < numberOfServiceCenters - 1; i++) {
-          visitRatios.setEntry(nonCentralServiceCenterIndices[i], visitRatiosSubVector.getEntry(i));
+          visitRatioVector.setEntry(
+              nonCentralServiceCenterIndices[i], visitRatiosSubVector.getEntry(i));
         }
 
-        LOGGER.debug("Visit ratios: {}", visitRatios);
+        LOGGER.debug("Visit ratios: {}", visitRatioVector);
 
         final var totalNumberOfJobs = getNetworkModel().getNumberOfJobs();
-
-        if (generateAnalysisData) {
-          calculateGMatrix(totalNumberOfJobs);
-          gVector = gMatrix.getColumnVector(numberOfServiceCenters - 1);
-          LOGGER.debug("G matrix: {}", gMatrix);
-        } else {
-          calculateGVector(totalNumberOfJobs);
-        }
-        LOGGER.debug("G vector: {}", gVector);
-
-        LOGGER.debug("Total number of jobs: {}", totalNumberOfJobs);
-        LOGGER.debug("Normalization constants: {}", gVector);
 
         final RealVector rateVector = new ArrayRealVector(numberOfServiceCenters);
         for (var i = 0; i < numberOfServiceCenters; i++) {
@@ -140,9 +129,37 @@ public final class GordonNewellAnalyzer extends Analyzer<GordonNewellAnalysisMod
 
         LOGGER.debug("Rate vector: {}", rateVector);
 
-        final var relativeUtilizationVector = visitRatios.ebeDivide(rateVector);
+        final var relativeUtilizationVector = visitRatioVector.ebeDivide(rateVector);
 
         LOGGER.debug("Relative utilization vector: {}", relativeUtilizationVector);
+
+        final var simplified =
+            serviceCenterModels.stream()
+                .allMatch(
+                    serviceCenterModel ->
+                        serviceCenterModel.getNumberOfServers() == 1
+                            && serviceCenterModel.getSelectedTimeDistribution()
+                                instanceof ExponentialTimeDistributionModel);
+
+        LOGGER.debug("Using simplified Buzen's algorithm: {}", simplified);
+
+        if (generateAnalysisData) {
+          if (simplified) {
+            calculateSimplifiedGMatrix(totalNumberOfJobs, relativeUtilizationVector);
+          } else {
+            calculateGMatrix(totalNumberOfJobs);
+          }
+          gVector = gMatrix.getColumnVector(numberOfServiceCenters - 1);
+          LOGGER.debug("G matrix: {}", gMatrix);
+        } else if (simplified) {
+          calculateSimplifiedGVector(totalNumberOfJobs, relativeUtilizationVector);
+        } else {
+          calculateGVector(totalNumberOfJobs);
+        }
+        LOGGER.debug("G vector: {}", gVector);
+
+        LOGGER.debug("Total number of jobs: {}", totalNumberOfJobs);
+        LOGGER.debug("Normalization constants: {}", gVector);
 
         final var performanceMeasureCollection =
             new PerformanceMeasureCollection(getNetworkModel());
@@ -150,7 +167,7 @@ public final class GordonNewellAnalyzer extends Analyzer<GordonNewellAnalysisMod
         var systemNumberOfJobs = 0.0;
         for (final var serviceCenterModel : serviceCenterModels) {
           final var serviceCenterIndex = serviceCenterModels.indexOf(serviceCenterModel);
-          final var visitRatio = visitRatios.getEntry(serviceCenterIndex);
+          final var visitRatio = visitRatioVector.getEntry(serviceCenterIndex);
           final var gValue = gVector.getEntry(totalNumberOfJobs - 1);
           final var normalizationConstant = gVector.getEntry(totalNumberOfJobs);
 
@@ -231,7 +248,7 @@ public final class GordonNewellAnalyzer extends Analyzer<GordonNewellAnalysisMod
         var systemResponseTime = 0.0;
         for (var i = 0; i < numberOfServiceCenters; i++) {
           systemResponseTime +=
-              visitRatios.getEntry(i)
+              visitRatioVector.getEntry(i)
                   * performanceMeasureCollection
                       .getPerformanceMeasure(
                           serviceCenterModels.get(i), PerformanceMeasureType.RESPONSE_TIME)
@@ -265,7 +282,8 @@ public final class GordonNewellAnalyzer extends Analyzer<GordonNewellAnalysisMod
                   k2Matrix,
                   probabilitySubVector,
                   visitRatiosSubVector,
-                  visitRatios,
+                  visitRatioVector,
+                  relativeUtilizationVector,
                   fMatrix,
                   gMatrix,
                   numberOfServiceCenters,
@@ -286,7 +304,7 @@ public final class GordonNewellAnalyzer extends Analyzer<GordonNewellAnalysisMod
     final var serviceCenterIndex =
         getNetworkModel().getServiceCenterModels().indexOf(serviceCenterModel);
 
-    return Math.pow(visitRatios.getEntry(serviceCenterIndex), numberOfJobs)
+    return Math.pow(visitRatioVector.getEntry(serviceCenterIndex), numberOfJobs)
         / A(serviceCenterModel, numberOfJobs);
   }
 
@@ -374,6 +392,41 @@ public final class GordonNewellAnalyzer extends Analyzer<GordonNewellAnalysisMod
     }
   }
 
+  private void calculateSimplifiedGVector(
+      final int numberOfJobs, final RealVector relativeUtilizationVector) {
+    fMatrix = null;
+
+    gVector = new ArrayRealVector(numberOfJobs + 1);
+    gVector.setEntry(0, 1.0);
+
+    for (var n = 0; n < relativeUtilizationVector.getDimension(); n++) {
+      final var x = relativeUtilizationVector.getEntry(n);
+
+      for (var k = 1; k <= numberOfJobs; k++) {
+        gVector.setEntry(k, gVector.getEntry(k) + x * gVector.getEntry(k - 1));
+      }
+    }
+  }
+
+  private void calculateSimplifiedGMatrix(
+      final int numberOfJobs, final RealVector relativeUtilizationVector) {
+    final var numberOfServiceCenters = relativeUtilizationVector.getDimension();
+
+    fMatrix = null;
+    gMatrix = new Array2DRowRealMatrix(numberOfJobs + 1, numberOfServiceCenters);
+
+    for (var n = 0; n < numberOfServiceCenters; n++) {
+      final var x = relativeUtilizationVector.getEntry(n);
+
+      gMatrix.setEntry(0, n, 1.0);
+      for (var k = 1; k <= numberOfJobs; k++) {
+        final var previousServiceCenterValue = n > 0 ? gMatrix.getEntry(k, n - 1) : 0.0;
+
+        gMatrix.setEntry(k, n, previousServiceCenterValue + x * gMatrix.getEntry(k - 1, n));
+      }
+    }
+  }
+
   private RealVector calculateFVector(
       final ServiceCenterModel serviceCenterModel, final int numberOfJobs) {
     final RealVector fVector = new ArrayRealVector(numberOfJobs + 1);
@@ -418,7 +471,7 @@ public final class GordonNewellAnalyzer extends Analyzer<GordonNewellAnalysisMod
     final var serviceCenterIndex =
         getNetworkModel().getServiceCenterModels().indexOf(serviceCenterModel);
     final var numberOfServers = serviceCenterModel.getNumberOfServers();
-    final var visitRatio = visitRatios.getEntry(serviceCenterIndex);
+    final var visitRatio = visitRatioVector.getEntry(serviceCenterIndex);
     final var serviceRate =
         ((ExponentialTimeDistributionModel) serviceCenterModel.getSelectedTimeDistribution())
             .getRate();

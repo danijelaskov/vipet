@@ -53,21 +53,21 @@ public final class JacksonNetworkAnalysisController
 
   @Override
   protected void initialize() {
-    final var probabilities = getModel().probabilities();
+    final var probabilityMatrix = getModel().probabilityMatrix();
 
     var step1Formula = new StringBuilder("\\mathbf{P}=\\begin{bmatrix}");
 
-    for (var i = 0; i < probabilities.getRowDimension(); i++) {
-      for (var j = 0; j < probabilities.getColumnDimension(); j++) {
-        final var probability = probabilities.getEntry(i, j);
+    for (var i = 0; i < probabilityMatrix.getRowDimension(); i++) {
+      for (var j = 0; j < probabilityMatrix.getColumnDimension(); j++) {
+        final var probability = probabilityMatrix.getEntry(i, j);
 
         step1Formula.append(NumericFormatUtil.formatNumber(probability, true, false));
-        if (j < probabilities.getColumnDimension() - 1) {
+        if (j < probabilityMatrix.getColumnDimension() - 1) {
           step1Formula.append(" & ");
         }
       }
 
-      if (i < probabilities.getRowDimension() - 1) {
+      if (i < probabilityMatrix.getRowDimension() - 1) {
         step1Formula.append(" \\\\ ");
       }
     }
@@ -86,14 +86,14 @@ public final class JacksonNetworkAnalysisController
     UIUtil.renderLaTeXFormula(step3Formula.toString(), step3ImageView);
 
     var step4Formula = new StringBuilder("\\mathbf{\\alpha}=");
-    final var alpha = getModel().externalArrivalRates();
+    final var alpha = getModel().externalArrivalRateVector();
     LaTeXUtil.populateColumnVector(alpha, step4Formula);
     UIUtil.renderLaTeXFormula(step4Formula.toString(), step4ImageView);
 
     final var step5Formula =
         new StringBuilder(
             "\\mathbf{\\lambda}=\\left(\\mathbf{I}-\\mathbf{P}^\\intercal\\right)^{-1}\\cdot\\mathbf{\\alpha}=");
-    final var lambda = getModel().averageArrivalRates();
+    final var lambda = getModel().arrivalRateVector();
     LaTeXUtil.populateColumnVector(lambda, step5Formula);
     UIUtil.renderLaTeXFormula(step5Formula.toString(), step5ImageView);
 
@@ -111,7 +111,7 @@ public final class JacksonNetworkAnalysisController
     final var selectedServiceCenterIndex =
         networkModel.getServiceCenterModels().indexOf(selectedServiceCenterModel);
 
-    final var lambda = model.averageArrivalRates().getEntry(selectedServiceCenterIndex);
+    final var lambda = model.arrivalRateVector().getEntry(selectedServiceCenterIndex);
     final var numberOfServers = selectedServiceCenterModel.getNumberOfServers();
     final var serviceRate =
         ((ExponentialTimeDistributionModel)

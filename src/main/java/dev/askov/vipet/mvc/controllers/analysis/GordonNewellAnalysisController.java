@@ -101,36 +101,45 @@ public final class GordonNewellAnalysisController
     LaTeXUtil.populateColumnVector(visitRatioSubVector, step5Formula);
     UIUtil.renderLaTeXFormula(step5Formula.toString(), step5ImageView);
 
-    final var visitRatioVector = gordonNewellAnalysisModel.visitRatios();
+    final var visitRatioVector = gordonNewellAnalysisModel.visitRatioVector();
     final var step6Formula = new StringBuilder("\\mathbf{v}=");
     LaTeXUtil.populateColumnVector(visitRatioVector, step6Formula);
     UIUtil.renderLaTeXFormula(step6Formula.toString(), step6ImageView);
 
-    final var fMatrix = gordonNewellAnalysisModel.fMatrix();
+    final var gMatrix = gordonNewellAnalysisModel.gMatrix();
 
-    for (var i = 0; i < fMatrix.getColumnDimension(); i++) {
+    for (var i = 0; i < gMatrix.getColumnDimension(); i++) {
       fBackgroundRectangles.add(new ArrayList<>());
       gBackgroundRectangles.add(new ArrayList<>());
 
-      for (var j = 0; j < fMatrix.getRowDimension(); j++) {
+      for (var j = 0; j < gMatrix.getRowDimension(); j++) {
         fBackgroundRectangles.get(i).add(null);
         gBackgroundRectangles.get(i).add(null);
       }
     }
 
-    for (var i = 0; i < fMatrix.getRowDimension(); i++) {
-      for (var j = 0; j < fMatrix.getColumnDimension(); j++) {
-        final var fValueFormula =
-            String.format(
-                "F_{%d}\\left(%d\\right)=%s",
-                j + 1, i, NumericFormatUtil.formatNumber(fMatrix.getEntry(i, j), true));
+    if (gordonNewellAnalysisModel.usesSimplifiedBuzenAlgorithm()) {
+      final var relativeUtilizationVector = gordonNewellAnalysisModel.relativeUtilizationVector();
 
-        final var fValueImageViewContainer = createFValueImageViewContainer(i, j, fValueFormula);
-        step7GridPane.add(fValueImageViewContainer, j, i);
+      for (var j = 0; j < relativeUtilizationVector.getDimension(); j++) {
+        step7GridPane.add(
+            createXValueImageViewContainer(j, relativeUtilizationVector.getEntry(j)), j, 0);
+      }
+    } else {
+      final var fMatrix = gordonNewellAnalysisModel.fMatrix();
+
+      for (var i = 0; i < fMatrix.getRowDimension(); i++) {
+        for (var j = 0; j < fMatrix.getColumnDimension(); j++) {
+          final var fValueFormula =
+              String.format(
+                  "F_{%d}\\left(%d\\right)=%s",
+                  j + 1, i, NumericFormatUtil.formatNumber(fMatrix.getEntry(i, j), true));
+
+          final var fValueImageViewContainer = createFValueImageViewContainer(i, j, fValueFormula);
+          step7GridPane.add(fValueImageViewContainer, j, i);
+        }
       }
     }
-
-    final var gMatrix = gordonNewellAnalysisModel.gMatrix();
 
     for (var i = 0; i < gMatrix.getRowDimension(); i++) {
       for (var j = 0; j < gMatrix.getColumnDimension(); j++) {
@@ -198,23 +207,89 @@ public final class GordonNewellAnalysisController
             "F_{%d}\\left(%d\\right)=\\frac{%s^{%d}}{%s}",
             j + 1,
             i,
-            NumericFormatUtil.formatNumber(model.visitRatios().getEntry(j)),
+            NumericFormatUtil.formatNumber(model.visitRatioVector().getEntry(j)),
             i,
             denominatorCalculationFormula);
 
-    final var fImageView = new ImageView();
+    installFormulaTooltip(fImageViewContainer, fCalculationFormula);
+
+    return fImageViewContainer;
+  }
+
+  private StackPane createXValueImageViewContainer(final int serverIndex, final double xValue) {
+    final var xImageViewContainer = new StackPane();
+    final var backgroundRectangle = createBackgroundRectangle(serverIndex);
+
+    xImageViewContainer.setOnMouseEntered(event -> backgroundRectangle.setOpacity(1.0));
+    xImageViewContainer.setOnMouseExited(event -> backgroundRectangle.setOpacity(0));
+
+    renderFormula(
+        0,
+        serverIndex,
+        "x_{%d}=%s".formatted(serverIndex + 1, NumericFormatUtil.formatNumber(xValue, true)),
+        xImageViewContainer,
+        backgroundRectangle,
+        fBackgroundRectangles);
+
+    final var mu =
+        ((ExponentialTimeDistributionModel)
+                networkModel
+                    .getServiceCenterModels()
+                    .get(serverIndex)
+                    .getSelectedTimeDistribution())
+            .getRate();
+
+    installFormulaTooltip(
+        xImageViewContainer,
+        "x_{%d}=\\frac{v_{%d}}{\\mu_{%d}}=\\frac{%s}{%s}"
+            .formatted(
+                serverIndex + 1,
+                serverIndex + 1,
+                serverIndex + 1,
+                NumericFormatUtil.formatNumber(
+                    model.visitRatioVector().getEntry(serverIndex), true),
+                NumericFormatUtil.formatNumber(mu, true)));
+
+    return xImageViewContainer;
+  }
+
+  private void installFormulaTooltip(final StackPane imageViewContainer, final String formula) {
+    final var imageView = new ImageView();
     UIUtil.renderLaTeXFormula(
-        fCalculationFormula,
-        fImageView,
+        formula,
+        imageView,
         Objects.equals(VIPET.getUserAgentStylesheet(), VIPET.STYLESHEET_MODENA)
             ? java.awt.Color.WHITE
             : java.awt.Color.BLACK);
 
-    final var fTooltip = new Tooltip();
-    fTooltip.setGraphic(fImageView);
-    Tooltip.install(fImageViewContainer, fTooltip);
+    final var tooltip = new Tooltip();
+    tooltip.setGraphic(imageView);
+    Tooltip.install(imageViewContainer, tooltip);
+  }
 
-    return fImageViewContainer;
+  private List<Rectangle> getGValueOperandRectangles(
+      final int numberOfJobs, final int serverIndex) {
+    final List<Rectangle> rectangles = new ArrayList<>();
+
+    if (model.usesSimplifiedBuzenAlgorithm()) {
+      // G_n(k) = G_{n-1}(k) + x_n * G_n(k-1), with G_n(0) = 1 and G_0(k) = 0 for k > 0
+      if (numberOfJobs > 0) {
+        rectangles.add(fBackgroundRectangles.get(serverIndex).getFirst());
+        rectangles.add(gBackgroundRectangles.get(serverIndex).get(numberOfJobs - 1));
+        if (serverIndex > 0) {
+          rectangles.add(gBackgroundRectangles.get(serverIndex - 1).get(numberOfJobs));
+        }
+      }
+    } else if (serverIndex > 0) {
+      for (var i = 0; i <= numberOfJobs; i++) {
+        rectangles.add(fBackgroundRectangles.get(serverIndex).get(i));
+        rectangles.add(gBackgroundRectangles.get(serverIndex - 1).get(i));
+      }
+    } else {
+      rectangles.add(fBackgroundRectangles.get(serverIndex).get(numberOfJobs));
+    }
+
+    return rectangles;
   }
 
   private void renderFormula(
@@ -286,34 +361,14 @@ public final class GordonNewellAnalysisController
     gImageViewContainer.setOnMouseEntered(
         event -> {
           backgroundRectangle.setOpacity(1.0);
-
-          final var fBackgroundRectangles = this.fBackgroundRectangles.get(serverIndex);
-          if (serverIndex > 0) {
-            final var gBackgroundRectangles = this.gBackgroundRectangles.get(serverIndex - 1);
-            for (var i = 0; i <= numberOfJobs; i++) {
-              if (fBackgroundRectangles.get(i) != null) {
-                fBackgroundRectangles.get(i).setOpacity(1.0);
-              }
-              gBackgroundRectangles.get(i).setOpacity(1.0);
-            }
-          } else {
-            fBackgroundRectangles.get(numberOfJobs).setOpacity(1.0);
-          }
+          getGValueOperandRectangles(numberOfJobs, serverIndex)
+              .forEach(rectangle -> rectangle.setOpacity(1.0));
         });
     gImageViewContainer.setOnMouseExited(
         event -> {
           backgroundRectangle.setOpacity(0);
-
-          final var fBackgroundRectangles = this.fBackgroundRectangles.get(serverIndex);
-          if (serverIndex > 0) {
-            final var gBackgroundRectangles = this.gBackgroundRectangles.get(serverIndex - 1);
-            for (var i = 0; i <= numberOfJobs; i++) {
-              fBackgroundRectangles.get(i).setOpacity(0);
-              gBackgroundRectangles.get(i).setOpacity(0);
-            }
-          } else {
-            fBackgroundRectangles.get(numberOfJobs).setOpacity(0);
-          }
+          getGValueOperandRectangles(numberOfJobs, serverIndex)
+              .forEach(rectangle -> rectangle.setOpacity(0));
         });
 
     renderFormula(
@@ -327,7 +382,20 @@ public final class GordonNewellAnalysisController
     final var gCalculationFormula =
         new StringBuilder("G_{%d}\\left(%d\\right)=".formatted(serverIndex + 1, numberOfJobs));
 
-    if (serverIndex == 0) {
+    if (model.usesSimplifiedBuzenAlgorithm()) {
+      if (numberOfJobs == 0) {
+        gCalculationFormula.append("1");
+      } else if (serverIndex == 0) {
+        gCalculationFormula.append(
+            "x_{%d}\\cdot G_{%d}\\left(%d\\right)"
+                .formatted(serverIndex + 1, serverIndex + 1, numberOfJobs - 1));
+      } else {
+        gCalculationFormula.append(
+            "G_{%d}\\left(%d\\right)+x_{%d}\\cdot G_{%d}\\left(%d\\right)"
+                .formatted(
+                    serverIndex, numberOfJobs, serverIndex + 1, serverIndex + 1, numberOfJobs - 1));
+      }
+    } else if (serverIndex == 0) {
       gCalculationFormula.append(
           "F_{%d}\\left(%d\\right)".formatted(serverIndex + 1, numberOfJobs));
     } else if (numberOfJobs < MAX_ADDEND_COUNT) {
@@ -347,17 +415,7 @@ public final class GordonNewellAnalysisController
           numberOfJobs);
     }
 
-    final var gImageView = new ImageView();
-    UIUtil.renderLaTeXFormula(
-        gCalculationFormula.toString(),
-        gImageView,
-        Objects.equals(VIPET.getUserAgentStylesheet(), VIPET.STYLESHEET_MODENA)
-            ? java.awt.Color.WHITE
-            : java.awt.Color.BLACK);
-
-    final var gTooltip = new Tooltip();
-    gTooltip.setGraphic(gImageView);
-    Tooltip.install(gImageViewContainer, gTooltip);
+    installFormulaTooltip(gImageViewContainer, gCalculationFormula.toString());
 
     return gImageViewContainer;
   }
@@ -390,7 +448,7 @@ public final class GordonNewellAnalysisController
 
     final var totalNumberOfJobs = model.numberOfJobs(); // K
     final var numberOfServiceCenters = model.numberOfServiceCenters(); // N
-    final var visitRatio = model.visitRatios().getEntry(selectedServiceCenterIndex); // v
+    final var visitRatio = model.visitRatioVector().getEntry(selectedServiceCenterIndex); // v
     final var previousNormalizingConstant =
         model.gMatrix().getEntry(totalNumberOfJobs - 1, numberOfServiceCenters - 1); // G(K-1)
     final var normalizingConstant =

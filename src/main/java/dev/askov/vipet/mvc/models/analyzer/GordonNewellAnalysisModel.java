@@ -14,10 +14,16 @@ public record GordonNewellAnalysisModel(
     RealMatrix intermediateMatrix2,
     RealVector probabilitySubVector,
     RealVector visitRatioSubVector,
-    RealVector visitRatios,
+    RealVector visitRatioVector,
+    RealVector relativeUtilizationVector,
     RealMatrix fMatrix,
     RealMatrix gMatrix,
     int numberOfServiceCenters,
     int numberOfJobs,
     PerformanceMeasureCollection performanceMeasureCollection,
-    Map<ServiceCenterModel, List<Pair<Integer, Double>>> stateProbabilities) {}
+    Map<ServiceCenterModel, List<Pair<Integer, Double>>> stateProbabilities) {
+
+  public boolean usesSimplifiedBuzenAlgorithm() {
+    return fMatrix == null;
+  }
+}

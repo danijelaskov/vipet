@@ -24,13 +24,13 @@ public final class JacksonNetworkAnalyzer extends Analyzer<JacksonNetworkAnalysi
   private static final Logger LOGGER = LoggerFactory.getLogger(JacksonNetworkAnalyzer.class);
   private static final int MAX_NUM_JOBS = 10;
 
-  private RealMatrix probabilities;
+  private RealMatrix probabilityMatrix;
   private RealMatrix k1Matrix;
   private RealMatrix k2Matrix;
-  private RealVector externalArrivalRates;
+  private RealVector externalArrivalRateVector;
   private RealVector rhoVector;
-  private RealVector visitRatios;
-  private RealVector arrivalRates;
+  private RealVector visitRatioVector;
+  private RealVector arrivalRateVector;
 
   public JacksonNetworkAnalyzer(
       final NetworkModel networkModel, final boolean generateAnalysisData) {
@@ -58,16 +58,17 @@ public final class JacksonNetworkAnalyzer extends Analyzer<JacksonNetworkAnalysi
             getNetworkModel().getServiceCenterModels();
         final var numberOfServiceCenters = serviceCenterModels.size();
 
-        probabilities = new Array2DRowRealMatrix(numberOfServiceCenters, numberOfServiceCenters);
+        probabilityMatrix =
+            new Array2DRowRealMatrix(numberOfServiceCenters, numberOfServiceCenters);
 
-        setProbabilities(serviceCenterModels, probabilities);
+        setProbabilities(serviceCenterModels, probabilityMatrix);
 
-        LOGGER.debug("Probabilities: {}", probabilities);
+        LOGGER.debug("Probabilities: {}", probabilityMatrix);
 
         final var sourceModels = getNetworkModel().getSourceModels();
         final var numberOfSources = sourceModels.size();
 
-        externalArrivalRates = new ArrayRealVector(numberOfServiceCenters);
+        externalArrivalRateVector = new ArrayRealVector(numberOfServiceCenters);
         var externalArrivalRatesSum = 0.0;
 
         for (var i = 0; i < numberOfServiceCenters; i++) {
@@ -85,23 +86,24 @@ public final class JacksonNetworkAnalyzer extends Analyzer<JacksonNetworkAnalysi
                               sourceModel.getSelectedTimeDistribution())
                           .getRate();
 
-              externalArrivalRates.addToEntry(i, arrivalRate);
+              externalArrivalRateVector.addToEntry(i, arrivalRate);
               externalArrivalRatesSum += arrivalRate;
             }
           }
         }
 
-        LOGGER.debug("External arrival rates: {}", externalArrivalRates);
+        LOGGER.debug("External arrival rates: {}", externalArrivalRateVector);
 
         k1Matrix =
             MatrixUtils.createRealIdentityMatrix(numberOfServiceCenters)
-                .subtract(probabilities.transpose());
+                .subtract(probabilityMatrix.transpose());
 
         k2Matrix = MatrixUtils.inverse(k1Matrix);
 
-        arrivalRates = new QRDecomposition(k1Matrix).getSolver().solve(externalArrivalRates);
+        arrivalRateVector =
+            new QRDecomposition(k1Matrix).getSolver().solve(externalArrivalRateVector);
 
-        LOGGER.debug("Arrival rate ratio vector: {}", arrivalRates);
+        LOGGER.debug("Arrival rate ratio vector: {}", arrivalRateVector);
 
         final var performanceMeasureCollection =
             new PerformanceMeasureCollection(getNetworkModel());
@@ -116,7 +118,7 @@ public final class JacksonNetworkAnalyzer extends Analyzer<JacksonNetworkAnalysi
         for (var i = 0; i < numberOfServiceCenters; i++) {
           final var serviceCenterModel = serviceCenterModels.get(i);
 
-          final var arrivalRate = arrivalRates.getEntry(i);
+          final var arrivalRate = arrivalRateVector.getEntry(i);
           final double numberOfServers = serviceCenterModel.getNumberOfServers();
           final var serviceRate =
               ((ExponentialTimeDistributionModel) serviceCenterModel.getSelectedTimeDistribution())
@@ -142,7 +144,7 @@ public final class JacksonNetworkAnalyzer extends Analyzer<JacksonNetworkAnalysi
           }
 
           // Throughput is equal to the arrival rate
-          final var throughput = arrivalRates.getEntry(i);
+          final var throughput = arrivalRateVector.getEntry(i);
           performanceMeasureCollection.setPerformanceMeasure(
               serviceCenterModel,
               PerformanceMeasureType.THROUGHPUT,
@@ -163,7 +165,7 @@ public final class JacksonNetworkAnalyzer extends Analyzer<JacksonNetworkAnalysi
               new PerformanceMeasure(numberOfJobsInQueue));
 
           // Tq = Jq / X
-          final var waitingTimeInQueue = numberOfJobsInQueue / arrivalRates.getEntry(i);
+          final var waitingTimeInQueue = numberOfJobsInQueue / arrivalRateVector.getEntry(i);
           performanceMeasureCollection.setPerformanceMeasure(
               serviceCenterModel,
               PerformanceMeasureType.WAITING_TIME,
@@ -206,12 +208,12 @@ public final class JacksonNetworkAnalyzer extends Analyzer<JacksonNetworkAnalysi
           }
         }
 
-        visitRatios = arrivalRates.mapDivide(externalArrivalRatesSum);
+        visitRatioVector = arrivalRateVector.mapDivide(externalArrivalRatesSum);
 
         var systemResponseTime = 0.0;
         for (var i = 0; i < numberOfServiceCenters; i++) {
           systemResponseTime +=
-              visitRatios.getEntry(i)
+              visitRatioVector.getEntry(i)
                   * performanceMeasureCollection
                       .getPerformanceMeasure(
                           serviceCenterModels.get(i), PerformanceMeasureType.RESPONSE_TIME)
@@ -221,7 +223,7 @@ public final class JacksonNetworkAnalyzer extends Analyzer<JacksonNetworkAnalysi
             PerformanceMeasureType.RESPONSE_TIME, new PerformanceMeasure(systemResponseTime));
 
         // λ = sum(1, N, α_i)
-        var systemThroughput = externalArrivalRates.getL1Norm();
+        var systemThroughput = externalArrivalRateVector.getL1Norm();
         performanceMeasureCollection.setSystemPerformanceMeasure(
             PerformanceMeasureType.THROUGHPUT, new PerformanceMeasure(systemThroughput));
 
@@ -242,11 +244,11 @@ public final class JacksonNetworkAnalyzer extends Analyzer<JacksonNetworkAnalysi
         if (generateAnalysisData) {
           analysisData =
               new JacksonNetworkAnalysisModel(
-                  probabilities,
+                  probabilityMatrix,
                   k1Matrix,
                   k2Matrix,
-                  externalArrivalRates,
-                  arrivalRates,
+                  externalArrivalRateVector,
+                  arrivalRateVector,
                   rhoVector,
                   performanceMeasureCollection,
                   stateProbabilities);

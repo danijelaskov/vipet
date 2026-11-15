@@ -9,11 +9,11 @@ import org.apache.commons.math3.linear.RealMatrix;
 import org.apache.commons.math3.linear.RealVector;
 
 public record JacksonNetworkAnalysisModel(
-    RealMatrix probabilities,
+    RealMatrix probabilityMatrix,
     RealMatrix intermediateMatrix1,
     RealMatrix intermediateMatrix2,
-    RealVector externalArrivalRates,
-    RealVector averageArrivalRates,
+    RealVector externalArrivalRateVector,
+    RealVector arrivalRateVector,
     RealVector rhoVector,
     PerformanceMeasureCollection performanceMeasureCollection,
     Map<ServiceCenterModel, List<Pair<Integer, Double>>> stateProbabilities) {}
