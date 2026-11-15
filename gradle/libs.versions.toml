@@ -7,7 +7,7 @@ spotless = "7.2.1"
 
 # Libraries
 jcommander = "1.82"
-gson = "2.14.0"
+gson = "2.15.0"
 opencsv = "5.12.0"
 poi = "5.5.1"
 commons-math3 = "3.6.1"
