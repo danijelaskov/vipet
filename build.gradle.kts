@@ -191,8 +191,8 @@ tasks.register("prepareAppDir") {
             .replace("{{APP_NAME}}", project.property("app.name") as String)
         file("$appDir/AppRun").writeText(processedAppRun)
         
-        // Make AppRun executable
-        file("$appDir/AppRun").setExecutable(true)
+        // Make AppRun executable for all users, as required by appimagetool
+        file("$appDir/AppRun").setExecutable(true, false)
 
         // Copy application files from jpackage output
         val jpackageDir = file("${layout.buildDirectory.get()}/jpackage/${project.property("app.name")}")
