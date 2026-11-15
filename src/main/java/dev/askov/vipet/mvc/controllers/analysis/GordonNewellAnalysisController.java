@@ -181,37 +181,38 @@ public final class GordonNewellAnalysisController
         i, j, fValueFormula, fImageViewContainer, backgroundRectangle, fBackgroundRectangles);
 
     final var numberOfServers = networkModel.getServiceCenterModels().get(j).getNumberOfServers();
-    final var mu =
-        ((ExponentialTimeDistributionModel)
-                networkModel.getServiceCenterModels().get(j).getSelectedTimeDistribution())
-            .getRate();
 
-    final var denominatorCalculationFormula = new StringBuilder();
+    final var fCalculationFormula =
+        new StringBuilder("F_{%d}\\left(%d\\right)=".formatted(j + 1, i));
 
     if (i == 0) {
-      denominatorCalculationFormula.append("1");
-    } else if (i <= MAX_FACTOR_COUNT) {
-      appendFactors(numberOfServers, mu, denominatorCalculationFormula, 1, i);
+      fCalculationFormula.append("1");
     } else {
-      final var startFactorCount =
-          MAX_FACTOR_COUNT % 2 == 0 ? MAX_FACTOR_COUNT / 2 : (MAX_FACTOR_COUNT + 1) / 2;
-      final var endFactorCount = MAX_FACTOR_COUNT / 2;
+      final var denominatorCalculationFormula = new StringBuilder();
 
-      appendFactors(numberOfServers, mu, denominatorCalculationFormula, 1, startFactorCount);
-      denominatorCalculationFormula.append("\\cdots");
-      appendFactors(numberOfServers, mu, denominatorCalculationFormula, i - endFactorCount + 1, i);
+      if (numberOfServers == 1) {
+        denominatorCalculationFormula.append("\\mu_{%d}".formatted(j + 1));
+        if (i > 1) {
+          denominatorCalculationFormula.append("^{%d}".formatted(i));
+        }
+      } else if (i <= MAX_FACTOR_COUNT) {
+        appendFactors(numberOfServers, j, denominatorCalculationFormula, 1, i);
+      } else {
+        final var startFactorCount =
+            MAX_FACTOR_COUNT % 2 == 0 ? MAX_FACTOR_COUNT / 2 : (MAX_FACTOR_COUNT + 1) / 2;
+        final var endFactorCount = MAX_FACTOR_COUNT / 2;
+
+        appendFactors(numberOfServers, j, denominatorCalculationFormula, 1, startFactorCount);
+        denominatorCalculationFormula.append("\\cdots");
+        appendFactors(numberOfServers, j, denominatorCalculationFormula, i - endFactorCount + 1, i);
+      }
+
+      fCalculationFormula.append(
+          "\\frac{v_{%d}%s}{%s}"
+              .formatted(j + 1, i > 1 ? "^{%d}".formatted(i) : "", denominatorCalculationFormula));
     }
 
-    var fCalculationFormula =
-        String.format(
-            "F_{%d}\\left(%d\\right)=\\frac{%s^{%d}}{%s}",
-            j + 1,
-            i,
-            NumericFormatUtil.formatNumber(model.visitRatioVector().getEntry(j)),
-            i,
-            denominatorCalculationFormula);
-
-    installFormulaTooltip(fImageViewContainer, fCalculationFormula);
+    installFormulaTooltip(fImageViewContainer, fCalculationFormula.toString());
 
     return fImageViewContainer;
   }
@@ -231,24 +232,10 @@ public final class GordonNewellAnalysisController
         backgroundRectangle,
         fBackgroundRectangles);
 
-    final var mu =
-        ((ExponentialTimeDistributionModel)
-                networkModel
-                    .getServiceCenterModels()
-                    .get(serverIndex)
-                    .getSelectedTimeDistribution())
-            .getRate();
-
     installFormulaTooltip(
         xImageViewContainer,
-        "x_{%d}=\\frac{v_{%d}}{\\mu_{%d}}=\\frac{%s}{%s}"
-            .formatted(
-                serverIndex + 1,
-                serverIndex + 1,
-                serverIndex + 1,
-                NumericFormatUtil.formatNumber(
-                    model.visitRatioVector().getEntry(serverIndex), true),
-                NumericFormatUtil.formatNumber(mu, true)));
+        "x_{%d}=\\frac{v_{%d}}{\\mu_{%d}}"
+            .formatted(serverIndex + 1, serverIndex + 1, serverIndex + 1));
 
     return xImageViewContainer;
   }
@@ -314,23 +301,17 @@ public final class GordonNewellAnalysisController
 
   private void appendFactors(
       final int numberOfServers,
-      final double mu,
+      final int serverIndex,
       final StringBuilder denominatorCalculationFormula,
       final int from,
       final int to) {
     for (var i = from; i <= to; i++) {
-      if (i <= numberOfServers) {
-        denominatorCalculationFormula.append(
-            String.format(
-                "\\left(%s\\cdot%s\\right)",
-                NumericFormatUtil.formatNumber(i, true), NumericFormatUtil.formatNumber(mu, true)));
-      } else {
-        denominatorCalculationFormula.append(
-            String.format(
-                "\\left(%s\\cdot%s\\right)",
-                NumericFormatUtil.formatNumber(numberOfServers, true),
-                NumericFormatUtil.formatNumber(mu, true)));
-      }
+      final var busyServers = Math.min(i, numberOfServers);
+
+      denominatorCalculationFormula.append(
+          busyServers == 1
+              ? "\\mu_{%d}".formatted(serverIndex + 1)
+              : "\\left(%d\\cdot\\mu_{%d}\\right)".formatted(busyServers, serverIndex + 1));
     }
   }
 
